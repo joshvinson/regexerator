@@ -50,7 +50,7 @@
 		<delete dir="${cov-bin}" />
 		<delete dir="${cov-int-dir}" />
 	</target>
-	
+
 	<target name="clean-dist" description="clean dist folder">
 		<delete dir="${dist}" />
 	</target>
@@ -66,7 +66,7 @@
 		<taskdef resource="com/coverity/anttask.xml" classpath="${anttask.jar}" />
 	</target>
 
-	<target name="cov-analyze" depends="cov-loadtask,compile">
+	<target name="cov-analyze" depends="cov-loadtask,cov-compile">
 		<covanalyzejava dir="${cov-int-dir}" classfiles="${cov-bin}" findsource="${src}" findjars="${lib}" additionaloptions="--all" />
 	</target>
 
