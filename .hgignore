@@ -1,0 +1,9 @@
+
+syntax: regexp
+^ant-bin$
+syntax: regexp
+^bin$
+syntax: regexp
+^dist$
+syntax: regexp
+^cov-.*$

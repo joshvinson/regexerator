@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Regexerator" default="clean" basedir=".">
+	<description>
+        Build file for Regexerator
+    </description>
+
+	<!-- set global properties for this build -->
+	<property name="src" location="src" />
+	<property name="bin" location="ant-bin" />
+	<property name="cov-bin" location="cov-bin" />
+	<property name="dist" location="dist" />
+	<property name="lib" location="" />
+	<property name="cov-int-dir" location="cov-int-dir" />
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+	</target>
+
+	<target name="compile" depends="init" description="compile the source ">
+		<mkdir dir="${bin}" />
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${bin}" extdirs="${lib}" />
+		<copy todir="${bin}">
+			<fileset dir="${src}" includes="**/*.gif,**/*.png" />
+		</copy>
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}" />
+
+		<!-- Create executable jar -->
+		<!-- Put everything in ${build} into the ${ant.project.name}-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/${ant.project.name}-${DSTAMP}-${TSTAMP}.jar">
+			<fileset dir="${bin}" />
+
+			<manifest>
+				<attribute name="Main-Class" value="rxr.RXR" />
+				<attribute name="Class-Path" value="" />
+			</manifest>
+		</jar>
+
+		<!-- Create source zip file -->
+		<zip destfile="${dist}/${ant.project.name}-${DSTAMP}-${TSTAMP}-src.zip" basedir="${src}" />
+	</target>
+
+	<target name="clean" description="remove .class files">
+		<delete dir="${bin}" />
+		<delete dir="${cov-bin}" />
+		<delete dir="${cov-int-dir}" />
+	</target>
+
+	<target name="cov-compile" depends="init" description="compile the source ">
+		<mkdir dir="${cov-bin}" />
+		<javac srcdir="${src}" destdir="${cov-bin}" extdirs="${lib}" debug="on" />
+	</target>
+
+	<property name="anttask.jar" value="C:/Program Files/Coverity/Coverity Static Analysis/library/coverity-anttask.jar" />
+
+	<target name="cov-loadtask">
+		<taskdef resource="com/coverity/anttask.xml" classpath="${anttask.jar}" />
+	</target>
+
+	<target name="cov-analyze" depends="cov-loadtask,compile">
+		<covanalyzejava dir="${cov-int-dir}" classfiles="${cov-bin}" findsource="${src}" findjars="${lib}" additionaloptions="--all" />
+	</target>
+
+	<target name="cov-commit" depends="cov-loadtask">
+		<covcommitdefects dir="${cov-int-dir}" stream="${ant.project.name}" remote="localhost" user="admin" password="123456">
+		</covcommitdefects>
+	</target>
+
+	<target name="coverity" depends="cov-loadtask,cov-analyze,cov-commit">
+	</target>
+</project>
