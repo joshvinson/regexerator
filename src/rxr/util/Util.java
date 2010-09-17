@@ -33,9 +33,9 @@ public class Util
 
 		public static java.awt.Color invert(java.awt.Color color)
 		{
-			int r = 255-color.getRed();
-			int g = 255-color.getGreen();
-			int b = 255-color.getBlue();
+			int r = 255 - color.getRed();
+			int g = 255 - color.getGreen();
+			int b = 255 - color.getBlue();
 
 			return new java.awt.Color(r, g, b, color.getAlpha());
 		}
@@ -235,7 +235,20 @@ public class Util
 					Class.forName(className);
 
 					//if we get here, it is
-					installLAF(name);
+					boolean add = true;
+
+					for(LAFInfo j : LAFs)
+					{
+						if(j.name.equals(name))
+						{
+							add = false;
+						}
+					}
+
+					if(add)
+					{
+						installLAF(name);
+					}
 				}
 				catch(ClassNotFoundException e)
 				{
@@ -456,8 +469,7 @@ public class Util
 		public static ClipboardOwner owner;
 
 		/**
-		 * Place a String on the clipboard, and make this class the owner of the Clipboard's
-		 * contents.
+		 * Place a String on the clipboard, and make this class the owner of the Clipboard's contents.
 		 */
 		public static void setClipboardContents(String str)
 		{

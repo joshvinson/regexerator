@@ -16,21 +16,21 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1284680149342</id>
+			<id>1284747610935</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-true-false-cov-bin</arguments>
+				<arguments>1.0-name-matches-true-true-^cov-.*$</arguments>
 			</matcher>
 		</filter>
 		<filter>
-			<id>1284680149345</id>
+			<id>1284747610939</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-true-false-cov-int-dir</arguments>
+				<arguments>1.0-name-matches-true-false-ant-bin</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>

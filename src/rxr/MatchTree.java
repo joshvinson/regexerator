@@ -49,7 +49,7 @@ public class MatchTree extends JTree implements RegexEventListener
 			}
 		});
 	}
-	
+
 	public RegexFieldListener getListener()
 	{
 		return listener;
@@ -358,6 +358,8 @@ public class MatchTree extends JTree implements RegexEventListener
 				g.setColor(Color.BLACK);
 				String s = "" + (index + 1);
 				Rectangle2D b = g.getFontMetrics().getStringBounds(s, g);
+
+				g.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
 				g.drawString(s, (int)((getIconWidth() - b.getWidth()) / 2) + 1, (int)(b.getHeight() + (getIconHeight() - b.getHeight()) / 2) - 2);
 			}

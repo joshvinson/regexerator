@@ -45,10 +45,14 @@
 		<zip destfile="${dist}/${ant.project.name}-${DSTAMP}-${TSTAMP}-src.zip" basedir="${src}" />
 	</target>
 
-	<target name="clean" description="remove .class files">
+	<target name="clean" description="clean output folders">
 		<delete dir="${bin}" />
 		<delete dir="${cov-bin}" />
 		<delete dir="${cov-int-dir}" />
+	</target>
+	
+	<target name="clean-dist" description="clean dist folder">
+		<delete dir="${dist}" />
 	</target>
 
 	<target name="cov-compile" depends="init" description="compile the source ">

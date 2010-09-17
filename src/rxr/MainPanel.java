@@ -220,11 +220,13 @@ public class MainPanel extends JPanel
 		matchTree.setBorder(Util.Layout.getEmptyBorder(4));
 		autoRefreshCheck.setBorder(new EmptyBorder(2, 2, 2, 2));
 		runButton.setBorder(new EmptyBorder(3, 3, 3, 5));
+		expandButton.setBorder(new EmptyBorder(3, 5, 3, 5));
+		collapseButton.setBorder(new EmptyBorder(3, 5, 3, 5));
 
 		jspa.setBorder(Util.Layout.getEmptyBorder(0));
 		jspb.setBorder(Util.Layout.getEmptyBorder(0));
 		TitleBarDropShadowBorder borderaa = new TitleBarDropShadowBorder("Regular Expression", null);
-		TitleBarDropShadowBorder borderab = new TitleBarDropShadowBorder("Options", null);
+		//TitleBarDropShadowBorder borderab = new TitleBarDropShadowBorder("Options", null);
 		TitleBarDropShadowBorder borderb = new TitleBarDropShadowBorder("Test Text", null);
 		TitleBarDropShadowBorder borderc = new TitleBarDropShadowBorder("Match Tree", null);
 		borderaa.getTitleBarBorder().setLeftColor(new Color(170, 220, 170));
