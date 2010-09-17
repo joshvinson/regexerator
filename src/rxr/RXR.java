@@ -31,6 +31,15 @@ public class RXR
 		window.setVisible(true);
 	}
 
+	/**
+	 * Performs a call to getResouce() that occurs in a predictable manner. In a
+	 * jar, the root will be the jar root. Outside of a jar, it will be the root
+	 * of the class/package hierarchy.
+	 * 
+	 * @param path
+	 *            the resource path
+	 * @return a URL to the requested resource
+	 */
 	public static URL load(String path)
 	{
 		return RXR.class.getClassLoader().getResource(path);

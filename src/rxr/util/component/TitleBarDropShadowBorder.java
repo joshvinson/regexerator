@@ -4,7 +4,8 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 /**
- * @author Josh Vinson
+ * A border that combines a TitleBarBorder and a DropShadowBorder to make a
+ * look-alike of eclipse interface elements.
  */
 public class TitleBarDropShadowBorder extends CompoundBorder
 {

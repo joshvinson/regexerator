@@ -50,7 +50,7 @@ public class MatchTree extends JTree implements RegexEventListener
 		});
 	}
 
-	public RegexFieldListener getListener()
+	private RegexFieldListener getListener()
 	{
 		return listener;
 	}
@@ -81,6 +81,9 @@ public class MatchTree extends JTree implements RegexEventListener
 		}
 	}
 
+	/**
+	 * Completely expands the tree.
+	 */
 	public void expand()
 	{
 		for(int i = 0; i < this.getRowCount(); i++)
@@ -89,6 +92,9 @@ public class MatchTree extends JTree implements RegexEventListener
 		}
 	}
 
+	/**
+	 * Completely collapses the tree.
+	 */
 	public void collapse()
 	{
 		for(int i = 0; i < this.getRowCount(); i++)
@@ -121,6 +127,10 @@ public class MatchTree extends JTree implements RegexEventListener
 			groupColors = new ArrayList<Color[]>();
 		}
 
+		/**
+		 * Recalculates matchNodes from the matches, groups, and groupColors
+		 * lists.
+		 */
 		public void recalc()
 		{
 			matchNodes.clear();
@@ -263,6 +273,11 @@ public class MatchTree extends JTree implements RegexEventListener
 			listeners.remove(l);
 		}
 
+		/**
+		 * Represents a single match for a regex, in the target document.
+		 * Contains information on the whole match, as well as information for
+		 * each capture group within the match.
+		 */
 		class MatchNode
 		{
 			int start;
@@ -288,6 +303,9 @@ public class MatchTree extends JTree implements RegexEventListener
 			}
 		}
 
+		/**
+		 * Represents one group in a single match.
+		 */
 		class GroupNode
 		{
 			public GroupNode(int start, int end, int index, Color color, String text)
@@ -314,6 +332,9 @@ public class MatchTree extends JTree implements RegexEventListener
 		}
 	}
 
+	/**
+	 * Used to render group icons as numbers and colors in the match tree.
+	 */
 	static class MatchTreeNodeRenderer extends DefaultTreeCellRenderer
 	{
 		static ColorIcon groupIcon = new ColorIcon();

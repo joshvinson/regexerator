@@ -69,27 +69,27 @@ public class MainPanel extends JPanel
 			@Override
 			public void regexEvent(Type t)
 			{
-				switch (t)
+				switch(t)
 				{
-					case RECALC_START:
-						regexStatusLabel.setIcon(startIcon);
-						regexStatusLabel.setText("Working");
-						break;
-					case RECALC_COMPLETE:
-						regexStatusLabel.setIcon(doneIcon);
-						regexStatusLabel.setText("Ready");
-						if(listener.matches != null)
-						{
-							statusLabel.setText(listener.matches.size() + " matches found.");
-						}
-						break;
-					case BAD_PATTERN:
-						regexStatusLabel.setIcon(errorIcon);
-						regexStatusLabel.setText("Error");
-						break;
-					default:
-						regexStatusLabel.setIcon(null);
-						break;
+				case RECALC_START:
+					regexStatusLabel.setIcon(startIcon);
+					regexStatusLabel.setText("Working");
+					break;
+				case RECALC_COMPLETE:
+					regexStatusLabel.setIcon(doneIcon);
+					regexStatusLabel.setText("Ready");
+					if(listener.matches != null)
+					{
+						statusLabel.setText(listener.matches.size() + " matches found.");
+					}
+					break;
+				case BAD_PATTERN:
+					regexStatusLabel.setIcon(errorIcon);
+					regexStatusLabel.setText("Error");
+					break;
+				default:
+					regexStatusLabel.setIcon(null);
+					break;
 				}
 			}
 		});
@@ -161,8 +161,8 @@ public class MainPanel extends JPanel
 				matchTree.collapse();
 			}
 		});
-		
-		statusLabel.setFont(new Font("",Font.BOLD,12));
+
+		statusLabel.setFont(new Font("", Font.BOLD, 12));
 
 		//--layout--
 		setLayout(new BorderLayout());
@@ -189,13 +189,9 @@ public class MainPanel extends JPanel
 		boxa.add(boxaa);
 		boxa.add(boxab);
 
-		//boxb = text pane
-		Box boxb = Box.createVerticalBox();
-
-		//boxc = tree
-		Box boxc = Box.createVerticalBox();
-
+		//splitPane = text and tree
 		JSplitPane splitPane = new JSplitPane();
+
 		JScrollPane jspa = new JScrollPane(textField);
 		JScrollPane jspb = new JScrollPane(matchTree);
 
@@ -207,11 +203,16 @@ public class MainPanel extends JPanel
 		splitPane.resetToPreferredSizes();
 		splitPane.setResizeWeight(.7);
 
+		//boxb = text pane
+		Box boxb = Box.createVerticalBox();
+		boxb.add(jspa);
+
+		//boxc = tree
+		Box boxc = Box.createVerticalBox();
+		boxc.add(jspb);
+
 		splitPane.setLeftComponent(boxb);
 		splitPane.setRightComponent(boxc);
-
-		boxb.add(jspa);
-		boxc.add(jspb);
 
 		//borders
 		regexField.setBorder(Util.Layout.getEmptyBorder(4));
@@ -225,23 +226,21 @@ public class MainPanel extends JPanel
 
 		jspa.setBorder(Util.Layout.getEmptyBorder(0));
 		jspb.setBorder(Util.Layout.getEmptyBorder(0));
-		TitleBarDropShadowBorder borderaa = new TitleBarDropShadowBorder("Regular Expression", null);
-		//TitleBarDropShadowBorder borderab = new TitleBarDropShadowBorder("Options", null);
+
+		TitleBarDropShadowBorder bordera = new TitleBarDropShadowBorder("Regular Expression", null);
 		TitleBarDropShadowBorder borderb = new TitleBarDropShadowBorder("Test Text", null);
 		TitleBarDropShadowBorder borderc = new TitleBarDropShadowBorder("Match Tree", null);
-		borderaa.getTitleBarBorder().setLeftColor(new Color(170, 220, 170));
+
+		bordera.getTitleBarBorder().setLeftColor(new Color(170, 220, 170));
 		borderb.getTitleBarBorder().setLeftColor(new Color(170, 170, 220));
 		borderc.getTitleBarBorder().setLeftColor(new Color(220, 170, 170));
 
 		boxa.setBorder(new EmptyBorder(0, 0, 0, 0));
-		boxaa.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0), borderaa));
-		//boxab.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0), borderab));
+		boxaa.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0), bordera));
 		boxab.setBorder(new EmptyBorder(0, 3, 0, 3));
 		boxb.setBorder(borderb);
 		boxc.setBorder(borderc);
 
-		//box2.setBorder(new CompoundBorder(border2, Util.Layout.getEmptyBorder(3)));
-		//setBorder(new CompoundBorder(new TitleBarBorder("RegeXeratoR"), Util.Layout.getEmptyBorder(2)));
 		setBorder(Util.Layout.getEmptyBorder(1));
 
 		//add

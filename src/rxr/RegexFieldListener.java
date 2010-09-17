@@ -12,23 +12,37 @@ import javax.swing.text.Highlighter.HighlightPainter;
 import rxr.RegexEventListener.Type;
 import rxr.ext.*;
 
+/**
+ * RegexFieldListener listens for changes in a Document, and reapplies a regular
+ * expression whenever a change occurs.
+ * 
+ */
 class RegexFieldListener implements DocumentListener
 {
-	JTextField source;
-	JTextPane target;
-	HashSet<RegexEventListener> listeners;
+	protected JTextField source;
+	protected JTextPane target;
+	protected HashSet<RegexEventListener> listeners;
 
-	Color highlightColor = new Color(255, 230, 0, 128);
-	Color selectColor = new Color(128, 0, 255, 128);
+	protected Color highlightColor = new Color(255, 230, 0, 128);
+	protected Color selectColor = new Color(128, 0, 255, 128);
 
-	ArrayList<int[]> matches;
-	ArrayList<int[][]> groups;
-	ArrayList<Color[]> groupColors;
+	protected ArrayList<int[]> matches;
+	protected ArrayList<int[][]> groups;
+	protected ArrayList<Color[]> groupColors;
 
-	boolean autoRecalc = true;
+	protected boolean autoRecalc = true;
 
-	Object selectHighlightHandle;
+	protected Object selectHighlightHandle;
 
+	/**
+	 * Creates a RegexFieldListener that takes a regex from source, and applies
+	 * it to target.
+	 * 
+	 * @param source
+	 *            the component to get the regex string from
+	 * @param target
+	 *            the component to apply the regex to
+	 */
 	public RegexFieldListener(JTextField source, JTextPane target)
 	{
 		this.source = source;
@@ -36,6 +50,12 @@ class RegexFieldListener implements DocumentListener
 		listeners = new HashSet<RegexEventListener>();
 	}
 
+	/**
+	 * Grabs a regex string from the source component, attempts to compile it,
+	 * and call recalcTarget(). At least regex events will be sent to listeners
+	 * during the execution of this method: RECALC_START at the beginning, and
+	 * either BAD_PATTERN or RECALC_COMPLETE depending on the result.
+	 */
 	public void regex()
 	{
 		fireRegexEvent(Type.RECALC_START);
@@ -69,6 +89,15 @@ class RegexFieldListener implements DocumentListener
 		});
 	}
 
+	/**
+	 * Changes the specific highlight on the target document. This will show up
+	 * as a different color than the highlighting for each match.
+	 * 
+	 * @param start
+	 *            the start index in the target document
+	 * @param end
+	 *            the end index in the target document
+	 */
 	public void setOutlineRange(int start, int end)
 	{
 		Highlighter h = target.getHighlighter();
@@ -98,6 +127,15 @@ class RegexFieldListener implements DocumentListener
 		}
 	}
 
+	/**
+	 * Recalculate the matches, groups, and groupColors lists based on the data
+	 * in m. Matches and groups are calculated from m by removing group 0 and
+	 * making that the match for that match number. The groups list is
+	 * zero-indexed, starting with the 1st, not 0th group.
+	 * 
+	 * @param m
+	 *            the Matcher object to get match and group data from
+	 */
 	protected void recalcTarget(Matcher m)
 	{
 		selectHighlightHandle = null;
@@ -143,6 +181,18 @@ class RegexFieldListener implements DocumentListener
 			groupColors.add(ccolors);
 		}
 
+		doHighlight();
+
+		fireRegexEvent(Type.RECALC_COMPLETE);
+	}
+
+	/**
+	 * Applies the match and group data from matches, groups, and groupColors to
+	 * the target document.
+	 */
+	private void doHighlight()
+	{
+		Highlighter h = target.getHighlighter();
 		HighlightPainter hp = new DefaultHighlighter.DefaultHighlightPainter(highlightColor);
 
 		for(int i = 0; i < matches.size(); i++)
@@ -174,11 +224,15 @@ class RegexFieldListener implements DocumentListener
 				return;
 			}
 		}
-
-		fireRegexEvent(Type.RECALC_COMPLETE);
 	}
 
-	private void fireRegexEvent(RegexEventListener.Type t)
+	/**
+	 * Notifies all listeners of a regex event.
+	 * 
+	 * @param t
+	 *            the type of regex event to send
+	 */
+	protected void fireRegexEvent(RegexEventListener.Type t)
 	{
 		for(RegexEventListener rel : listeners)
 		{
@@ -210,6 +264,9 @@ class RegexFieldListener implements DocumentListener
 		}
 	}
 
+	/**
+	 * @return the source component
+	 */
 	public JTextField getSource()
 	{
 		return source;
@@ -220,6 +277,9 @@ class RegexFieldListener implements DocumentListener
 		this.source = source;
 	}
 
+	/**
+	 * @return the target component
+	 */
 	public JTextPane getTarget()
 	{
 		return target;
@@ -230,6 +290,10 @@ class RegexFieldListener implements DocumentListener
 		this.target = target;
 	}
 
+	/**
+	 * @return if the regex is automatically reapplied on changes to the regex
+	 *         or target document
+	 */
 	public boolean isAutoRecalc()
 	{
 		return autoRecalc;
@@ -240,16 +304,25 @@ class RegexFieldListener implements DocumentListener
 		this.autoRecalc = autoRecalc;
 	}
 
+	/**
+	 * @return a list of whole regex matches from the last calculated match
+	 */
 	public ArrayList<int[]> getMatches()
 	{
 		return matches;
 	}
 
+	/**
+	 * @return a list of each set of groups from the last calculated match
+	 */
 	public ArrayList<int[][]> getGroups()
 	{
 		return groups;
 	}
 
+	/**
+	 * @return a list of each set of colors used for each group
+	 */
 	public ArrayList<Color[]> getGroupColors()
 	{
 		return groupColors;

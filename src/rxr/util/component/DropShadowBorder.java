@@ -5,7 +5,7 @@ import java.awt.*;
 import javax.swing.border.*;
 
 /**
- * @author Josh Vinson
+ * A border that adds an eclipse2-style drop shadow.
  */
 public class DropShadowBorder extends AbstractBorder
 {
@@ -36,7 +36,8 @@ public class DropShadowBorder extends AbstractBorder
 	/**
 	 * Returns the insets of the border.
 	 * 
-	 * @param c the component for which this border insets value applies
+	 * @param c
+	 *            the component for which this border insets value applies
 	 */
 	public Insets getBorderInsets(Component c)
 	{
@@ -46,8 +47,10 @@ public class DropShadowBorder extends AbstractBorder
 	/**
 	 * Reinitialize the insets parameter with this Border's current Insets.
 	 * 
-	 * @param c the component for which this border insets value applies
-	 * @param insets the object to be reinitialized
+	 * @param c
+	 *            the component for which this border insets value applies
+	 * @param insets
+	 *            the object to be reinitialized
 	 */
 	public Insets getBorderInsets(Component c, Insets insets)
 	{

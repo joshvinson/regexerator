@@ -4,7 +4,12 @@ import java.awt.*;
 
 import javax.swing.text.*;
 
-//based on http://www.java2s.com/Code/Java/Swing-JFC/JTextPaneHighlightExample.htm
+/**
+ * Underlines a section of text in any color.
+ * 
+ * Based on
+ * http://www.java2s.com/Code/Java/Swing-JFC/JTextPaneHighlightExample.htm
+ */
 public class UnderlineHighlighter extends DefaultHighlighter
 {
 	protected Highlighter.HighlightPainter painter;
