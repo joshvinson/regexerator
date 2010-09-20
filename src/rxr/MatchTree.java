@@ -377,12 +377,16 @@ public class MatchTree extends JTree implements RegexEventListener
 				g.drawOval(x + 1, y + 1, 14, 14);
 
 				g.setColor(Color.BLACK);
-				String s = "" + (index + 1);
+				String s = "" + (index + 1) % 100;
 				Rectangle2D b = g.getFontMetrics().getStringBounds(s, g);
 
-				g.setFont(new Font("Tahoma", Font.PLAIN, 12));
+				Font tempf = g.getFont();
 
-				g.drawString(s, (int)((getIconWidth() - b.getWidth()) / 2) + 1, (int)(b.getHeight() + (getIconHeight() - b.getHeight()) / 2) - 2);
+				g.setFont(new Font("Tahoma", Font.PLAIN, 11));
+
+				g.drawString(s, (int)((getIconWidth() - b.getWidth()) / 2)+1, (int)(b.getHeight() + (getIconHeight() - b.getHeight()) / 2) - 2);
+
+				g.setFont(tempf);
 			}
 
 			@Override
