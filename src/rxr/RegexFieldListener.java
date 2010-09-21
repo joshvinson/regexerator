@@ -15,7 +15,6 @@ import rxr.ext.*;
 /**
  * RegexFieldListener listens for changes in a Document, and reapplies a regular
  * expression whenever a change occurs.
- * 
  */
 class RegexFieldListener implements DocumentListener
 {
@@ -68,14 +67,14 @@ class RegexFieldListener implements DocumentListener
 
 		final String regex = source.getText();
 
-		if(regex.equals(""))
+		/*if(regex.equals(""))
 		{
 			//reset target
 			recalcTarget(null);
 			//not doing any matching, but we know the result of the replace, so just do that.
 			replaceTarget.setText(target.getText());
 			return;
-		}
+		}*/
 
 		SwingUtilities.invokeLater(new Runnable()
 		{
