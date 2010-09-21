@@ -91,6 +91,7 @@ class RegexFieldListener implements DocumentListener
 				catch(Exception e)
 				{
 					recalcTarget(null);
+					replaceTarget.setText(target.getText());
 					fireRegexEvent(Type.BAD_PATTERN);
 					return;
 				}
