@@ -25,7 +25,7 @@ class RegexFieldListener implements DocumentListener
 	protected JTextPane replaceTarget;
 	protected HashSet<RegexEventListener> listeners;
 
-	protected Color highlightColor = new Color(255, 230, 0, 128);
+	protected Color highlightColor = new Color(255, 230, 0, 96);
 	protected Color selectColor = new Color(128, 0, 255, 128);
 
 	protected ArrayList<int[]> matches;
@@ -86,7 +86,17 @@ class RegexFieldListener implements DocumentListener
 				{
 					Pattern p = Pattern.compile(regex);
 					Matcher m = p.matcher(target.getDocument().getText(0, target.getDocument().getLength()));
-					recalcTarget(m);
+					try
+					{
+						recalcTarget(m);
+					}
+					catch(Exception e)
+					{
+						//recalcTarget(null);
+						replaceTarget.setText(target.getText());
+						fireRegexEvent(Type.BAD_REPLACE);
+						return;
+					}
 				}
 				catch(Exception e)
 				{
@@ -95,6 +105,7 @@ class RegexFieldListener implements DocumentListener
 					fireRegexEvent(Type.BAD_PATTERN);
 					return;
 				}
+
 			}
 		});
 	}

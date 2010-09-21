@@ -28,6 +28,7 @@ public class MainPanel extends JPanel
 	JSplitPane splitPane2;
 	JTextField replaceRegexField;
 	JLabel replaceRegexLabel;
+	JLabel replaceStatusLabel;
 
 	RegexFieldListener listener;
 
@@ -38,6 +39,7 @@ public class MainPanel extends JPanel
 		final ImageIcon doneIcon = new ImageIcon(RXR.load("media/14073.complete_status.gif"));
 		final ImageIcon errorIcon = new ImageIcon(RXR.load("media/10448.error_obj.gif"));
 		final ImageIcon runIcon = new ImageIcon(RXR.load("media/17155.run_exc.png"));
+		final ImageIcon waitingIcon = new ImageIcon(RXR.load("media/13437.elipses.gif"));
 
 		//--components init--
 		regexField = new JTextField();
@@ -53,6 +55,7 @@ public class MainPanel extends JPanel
 		replaceField = new JTextPane();
 		replaceRegexField = new JTextField();
 		replaceRegexLabel = new JLabel("Replace with");
+		replaceStatusLabel = new JLabel("Ready");
 
 		//--components configure--
 		listener = new RegexFieldListener(regexField, textField, replaceRegexField, replaceField);
@@ -84,10 +87,14 @@ public class MainPanel extends JPanel
 				case RECALC_START:
 					regexStatusLabel.setIcon(startIcon);
 					regexStatusLabel.setText("Working");
+					replaceStatusLabel.setIcon(startIcon);
+					replaceStatusLabel.setText("Working");
 					break;
 				case RECALC_COMPLETE:
 					regexStatusLabel.setIcon(doneIcon);
-					regexStatusLabel.setText("Ready  ");
+					regexStatusLabel.setText("Ready");
+					replaceStatusLabel.setIcon(doneIcon);
+					replaceStatusLabel.setText("Ready");
 					if(listener.matches != null)
 					{
 						statusLabel.setText(listener.matches.size() + " matches found.");
@@ -95,10 +102,19 @@ public class MainPanel extends JPanel
 					break;
 				case BAD_PATTERN:
 					regexStatusLabel.setIcon(errorIcon);
-					regexStatusLabel.setText("Error  ");
+					regexStatusLabel.setText("Error");
+					replaceStatusLabel.setIcon(waitingIcon);
+					replaceStatusLabel.setText("Waiting");
+					break;
+				case BAD_REPLACE:
+					regexStatusLabel.setIcon(doneIcon);
+					regexStatusLabel.setText("Ready");
+					replaceStatusLabel.setIcon(errorIcon);
+					replaceStatusLabel.setText("Error");
 					break;
 				default:
 					regexStatusLabel.setIcon(null);
+					replaceStatusLabel.setIcon(null);
 					break;
 				}
 			}
@@ -182,6 +198,11 @@ public class MainPanel extends JPanel
 		replaceRegexLabel.setBackground(Color.WHITE);
 		replaceRegexLabel.setForeground(Color.GRAY);
 
+		replaceStatusLabel.setIcon(doneIcon);
+		replaceStatusLabel.setOpaque(true);
+		replaceStatusLabel.setBackground(Color.WHITE);
+		replaceStatusLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+
 		//--layout--
 		setLayout(new BorderLayout());
 
@@ -199,6 +220,7 @@ public class MainPanel extends JPanel
 		final Box boxaa2 = Box.createHorizontalBox();
 		boxaa2.add(replaceRegexLabel);
 		boxaa2.add(replaceRegexField);
+		boxaa2.add(replaceStatusLabel);
 
 		boxaa1.add(boxaa);
 		//boxaa1.add(boxaa2);
@@ -274,6 +296,8 @@ public class MainPanel extends JPanel
 
 		replaceRegexField.setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 0, Color.GRAY), Util.Layout.getEmptyBorder(4)));
 		replaceRegexLabel.setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 1, Color.GRAY), new EmptyBorder(5, 3, 5, 3)));
+
+		replaceStatusLabel.setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 0, Color.GRAY), new EmptyBorder(4, 4, 4, 4)));
 
 		//jspa.setBorder(Util.Layout.getEmptyBorder(0));
 		//jspb.setBorder(Util.Layout.getEmptyBorder(0));
