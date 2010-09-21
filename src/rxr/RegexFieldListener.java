@@ -21,6 +21,7 @@ class RegexFieldListener implements DocumentListener
 {
 	protected JTextField source;
 	protected JTextPane target;
+	protected JTextField replaceSource;
 	protected JTextPane replaceTarget;
 	protected HashSet<RegexEventListener> listeners;
 
@@ -32,7 +33,7 @@ class RegexFieldListener implements DocumentListener
 	protected ArrayList<Color[]> groupColors;
 
 	protected boolean autoRecalc = true;
-	
+
 	boolean doReplace = false;
 
 	protected Object selectHighlightHandle;
@@ -46,10 +47,12 @@ class RegexFieldListener implements DocumentListener
 	 * @param target
 	 *            the component to apply the regex to
 	 */
-	public RegexFieldListener(JTextField source, JTextPane target)
+	public RegexFieldListener(JTextField source, JTextPane target, JTextField replaceSource, JTextPane replaceTarget)
 	{
 		this.source = source;
 		this.target = target;
+		this.replaceSource = replaceSource;
+		this.replaceTarget = replaceTarget;
 		listeners = new HashSet<RegexEventListener>();
 	}
 
@@ -67,7 +70,10 @@ class RegexFieldListener implements DocumentListener
 
 		if(regex.equals(""))
 		{
+			//reset target
 			recalcTarget(null);
+			//not doing any matching, but we know the result of the replace, so just do that.
+			replaceTarget.setText(target.getText());
 			return;
 		}
 
@@ -163,8 +169,9 @@ class RegexFieldListener implements DocumentListener
 		matches = new ArrayList<int[]>();
 		groups = new ArrayList<int[][]>();
 		groupColors = new ArrayList<Color[]>();
-		
-		StringBuffer replace = new StringBuffer();
+
+		StringBuffer replaceSB = new StringBuffer();
+		String replaceStr = replaceSource.getText();
 
 		while(m.find())
 		{
@@ -184,12 +191,14 @@ class RegexFieldListener implements DocumentListener
 
 			groups.add(current);
 			groupColors.add(ccolors);
-			
+
 			if(doReplace)
 			{
-				//m.appendReplacement(sb, replacement)
+				m.appendReplacement(replaceSB, replaceStr);
 			}
 		}
+		m.appendTail(replaceSB);
+		replaceTarget.setText(replaceSB.toString());
 
 		doHighlight();
 
