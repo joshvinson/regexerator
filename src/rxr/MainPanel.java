@@ -23,6 +23,9 @@ public class MainPanel extends JPanel
 	JButton expandButton;
 	JButton collapseButton;
 	JLabel statusLabel;
+	JCheckBox replaceCheck;
+	JTextPane replaceField;
+	JSplitPane splitPane2;
 
 	RegexFieldListener listener;
 
@@ -44,6 +47,8 @@ public class MainPanel extends JPanel
 		expandButton = new JButton("Expand");
 		collapseButton = new JButton("Collapse");
 		statusLabel = new JLabel();
+		replaceCheck = new JCheckBox("Replace", false);
+		replaceField = new JTextPane();
 
 		//--components configure--
 		listener = new RegexFieldListener(regexField, textField);
@@ -164,6 +169,9 @@ public class MainPanel extends JPanel
 
 		statusLabel.setFont(new Font("", Font.BOLD, 12));
 
+		replaceCheck.setFocusable(false);
+		replaceField.setEditable(false);
+
 		//--layout--
 		setLayout(new BorderLayout());
 
@@ -179,6 +187,7 @@ public class MainPanel extends JPanel
 		Box boxab = Box.createHorizontalBox();
 		boxab.add(runButton);
 		boxab.add(autoRefreshCheck);
+		boxab.add(replaceCheck);
 		boxab.add(Box.createHorizontalGlue());
 		boxab.add(statusLabel);
 		boxab.add(Box.createHorizontalGlue());
@@ -189,11 +198,13 @@ public class MainPanel extends JPanel
 		boxa.add(boxaa);
 		boxa.add(boxab);
 
-		//splitPane = text and tree
-		JSplitPane splitPane = new JSplitPane();
-
-		JScrollPane jspa = new JScrollPane(textField);
+		//scrollpanes
+		final JScrollPane jspa = new JScrollPane(textField);
+		final JScrollPane jspaa = new JScrollPane(replaceField);
 		JScrollPane jspb = new JScrollPane(matchTree);
+
+		//splitPane = text and tree
+		final JSplitPane splitPane = new JSplitPane();
 
 		splitPane.setBorder(Util.Layout.getEmptyBorder());
 		BasicSplitPaneUI ui = (BasicSplitPaneUI)splitPane.getUI();
@@ -203,15 +214,31 @@ public class MainPanel extends JPanel
 		splitPane.resetToPreferredSizes();
 		splitPane.setResizeWeight(.7);
 
+		//splitPane2 = test and replace
+		splitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+
+		splitPane2.setBorder(Util.Layout.getEmptyBorder());
+		ui = (BasicSplitPaneUI)splitPane2.getUI();
+		ui.getDivider().setBorder(Util.Layout.getEmptyBorder());
+		ui.getDivider().setDividerSize(3);
+		splitPane2.setContinuousLayout(true);
+		splitPane2.resetToPreferredSizes();
+		splitPane2.setResizeWeight(.5);
+
 		//boxb = text pane
-		Box boxb = Box.createVerticalBox();
-		boxb.add(jspa);
+		//Box boxb = Box.createVerticalBox();
+		//boxb.add(jspa);
+		//boxb.add(jspaa);
+		splitPane2.setTopComponent(jspa);
+		splitPane2.setBottomComponent(jspaa);
+
+		//splitPane.setLeftComponent(boxb);
+		splitPane.setLeftComponent(splitPane2);
 
 		//boxc = tree
 		Box boxc = Box.createVerticalBox();
 		boxc.add(jspb);
 
-		splitPane.setLeftComponent(boxb);
 		splitPane.setRightComponent(boxc);
 
 		//borders
@@ -224,27 +251,52 @@ public class MainPanel extends JPanel
 		expandButton.setBorder(new EmptyBorder(3, 5, 3, 5));
 		collapseButton.setBorder(new EmptyBorder(3, 5, 3, 5));
 
-		jspa.setBorder(Util.Layout.getEmptyBorder(0));
-		jspb.setBorder(Util.Layout.getEmptyBorder(0));
+		//jspa.setBorder(Util.Layout.getEmptyBorder(0));
+		//jspb.setBorder(Util.Layout.getEmptyBorder(0));
 
 		TitleBarDropShadowBorder bordera = new TitleBarDropShadowBorder("Regular Expression", null);
 		TitleBarDropShadowBorder borderb = new TitleBarDropShadowBorder("Test Text", null);
 		TitleBarDropShadowBorder borderc = new TitleBarDropShadowBorder("Match Tree", null);
+		TitleBarDropShadowBorder borderd = new TitleBarDropShadowBorder("Replace Result", null);
 
 		bordera.getTitleBarBorder().setLeftColor(new Color(170, 220, 170));
 		borderb.getTitleBarBorder().setLeftColor(new Color(170, 170, 220));
 		borderc.getTitleBarBorder().setLeftColor(new Color(220, 170, 170));
+		borderd.getTitleBarBorder().setLeftColor(new Color(170, 170, 220));
 
 		boxa.setBorder(new EmptyBorder(0, 0, 0, 0));
 		boxaa.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0), bordera));
 		boxab.setBorder(new EmptyBorder(0, 3, 0, 3));
-		boxb.setBorder(borderb);
-		boxc.setBorder(borderc);
+		jspa.setBorder(borderb);
+		jspb.setBorder(borderc);
+		jspaa.setBorder(borderd);
 
 		setBorder(Util.Layout.getEmptyBorder(1));
 
 		//add
 		add(boxa, BorderLayout.NORTH);
 		add(splitPane, BorderLayout.CENTER);
+
+		replaceCheck.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if(replaceCheck.isSelected() && splitPane.getLeftComponent() == splitPane2)
+				{
+					splitPane.remove(splitPane2);
+					splitPane2.remove(jspa);
+					splitPane.setLeftComponent(jspa);
+					listener.setDoReplace(true);
+				}
+				else
+				{
+					splitPane.remove(jspa);
+					splitPane2.setTopComponent(jspa);
+					splitPane.setLeftComponent(splitPane2);
+					listener.setDoReplace(false);
+				}
+			}
+		});
 	}
 }

@@ -369,8 +369,9 @@ public class MatchTree extends JTree implements RegexEventListener
 			public void paintIcon(Component c, Graphics g, int x, int y)
 			{
 				((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-				g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 192));
-				g.setColor(color);
+				Color gc = new Color(color.getRed(), color.getGreen(), color.getBlue(), 255 - color.getBlue()/3);
+				g.setColor(gc);
+				//g.setColor(color);
 				g.fillOval(x + 1, y + 1, 14, 14);
 
 				g.setColor(new Color(0, 0, 0, 192));
@@ -384,7 +385,7 @@ public class MatchTree extends JTree implements RegexEventListener
 
 				g.setFont(new Font("Tahoma", Font.PLAIN, 11));
 
-				g.drawString(s, (int)((getIconWidth() - b.getWidth()) / 2)+1, (int)(b.getHeight() + (getIconHeight() - b.getHeight()) / 2) - 2);
+				g.drawString(s, (int)((getIconWidth() - b.getWidth()) / 2) + 1, (int)(b.getHeight() + (getIconHeight() - b.getHeight()) / 2) - 2);
 
 				g.setFont(tempf);
 			}

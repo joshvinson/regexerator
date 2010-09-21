@@ -8,6 +8,10 @@ import rxr.util.*;
 
 public class RXR
 {
+	/**
+	 * Entry point into regexerator.
+	 * @param args not used
+	 */
 	public static void main(String[] args)
 	{
 		try
