@@ -26,6 +26,8 @@ public class MainPanel extends JPanel
 	JCheckBox replaceCheck;
 	JTextPane replaceField;
 	JSplitPane splitPane2;
+	JTextField replaceRegexField;
+	JLabel replaceRegexLabel;
 
 	RegexFieldListener listener;
 
@@ -49,6 +51,8 @@ public class MainPanel extends JPanel
 		statusLabel = new JLabel();
 		replaceCheck = new JCheckBox("Replace", false);
 		replaceField = new JTextPane();
+		replaceRegexField = new JTextField();
+		replaceRegexLabel = new JLabel("with");
 
 		//--components configure--
 		listener = new RegexFieldListener(regexField, textField);
@@ -74,32 +78,33 @@ public class MainPanel extends JPanel
 			@Override
 			public void regexEvent(Type t)
 			{
-				switch(t)
+				switch (t)
 				{
-				case RECALC_START:
-					regexStatusLabel.setIcon(startIcon);
-					regexStatusLabel.setText("Working");
-					break;
-				case RECALC_COMPLETE:
-					regexStatusLabel.setIcon(doneIcon);
-					regexStatusLabel.setText("Ready");
-					if(listener.matches != null)
-					{
-						statusLabel.setText(listener.matches.size() + " matches found.");
-					}
-					break;
-				case BAD_PATTERN:
-					regexStatusLabel.setIcon(errorIcon);
-					regexStatusLabel.setText("Error");
-					break;
-				default:
-					regexStatusLabel.setIcon(null);
-					break;
+					case RECALC_START:
+						regexStatusLabel.setIcon(startIcon);
+						regexStatusLabel.setText("Working");
+						break;
+					case RECALC_COMPLETE:
+						regexStatusLabel.setIcon(doneIcon);
+						regexStatusLabel.setText("Ready  ");
+						if(listener.matches != null)
+						{
+							statusLabel.setText(listener.matches.size() + " matches found.");
+						}
+						break;
+					case BAD_PATTERN:
+						regexStatusLabel.setIcon(errorIcon);
+						regexStatusLabel.setText("Error  ");
+						break;
+					default:
+						regexStatusLabel.setIcon(null);
+						break;
 				}
 			}
 		});
 
 		regexStatusLabel.setIcon(doneIcon);
+		regexStatusLabel.setFont(new Font("Courier",Font.PLAIN,12));
 		regexStatusLabel.setOpaque(true);
 		regexStatusLabel.setBackground(Color.WHITE);
 		regexStatusLabel.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -171,16 +176,21 @@ public class MainPanel extends JPanel
 
 		replaceCheck.setFocusable(false);
 		replaceField.setEditable(false);
+		
+		replaceRegexLabel.setOpaque(true);
+		replaceRegexLabel.setBackground(new Color(240,255,240));
 
 		//--layout--
 		setLayout(new BorderLayout());
 
 		//boxa = main north box
-		Box boxa = Box.createVerticalBox();
+		final Box boxa = Box.createVerticalBox();
 
 		//boxaa = regex field/status label
-		Box boxaa = Box.createHorizontalBox();
+		final Box boxaa = Box.createHorizontalBox();
 		boxaa.add(regexField);
+		//boxaa.add(replaceRegexField);
+		//boxaa.add(replaceRegexLabel);
 		boxaa.add(regexStatusLabel);
 
 		//boxab = options
@@ -233,7 +243,8 @@ public class MainPanel extends JPanel
 		splitPane2.setBottomComponent(jspaa);
 
 		//splitPane.setLeftComponent(boxb);
-		splitPane.setLeftComponent(splitPane2);
+		//splitPane.setLeftComponent(splitPane2);
+		splitPane.setLeftComponent(jspa);
 
 		//boxc = tree
 		Box boxc = Box.createVerticalBox();
@@ -250,6 +261,9 @@ public class MainPanel extends JPanel
 		runButton.setBorder(new EmptyBorder(3, 3, 3, 5));
 		expandButton.setBorder(new EmptyBorder(3, 5, 3, 5));
 		collapseButton.setBorder(new EmptyBorder(3, 5, 3, 5));
+
+		replaceRegexField.setBorder(Util.Layout.getEmptyBorder(4));
+		replaceRegexLabel.setBorder(new EmptyBorder(5,0,5,0));
 
 		//jspa.setBorder(Util.Layout.getEmptyBorder(0));
 		//jspb.setBorder(Util.Layout.getEmptyBorder(0));
@@ -282,19 +296,30 @@ public class MainPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				if(replaceCheck.isSelected() && splitPane.getLeftComponent() == splitPane2)
-				{
-					splitPane.remove(splitPane2);
-					splitPane2.remove(jspa);
-					splitPane.setLeftComponent(jspa);
-					listener.setDoReplace(true);
-				}
-				else
+				if(replaceCheck.isSelected() && splitPane.getLeftComponent() == jspa)
 				{
 					splitPane.remove(jspa);
 					splitPane2.setTopComponent(jspa);
 					splitPane.setLeftComponent(splitPane2);
+
+					boxaa.add(replaceRegexLabel, 1);
+					boxaa.add(replaceRegexField, 2);
+
+					boxaa.validate();
+
 					listener.setDoReplace(false);
+				}
+				else
+				{
+					splitPane.remove(splitPane2);
+					splitPane2.remove(jspa);
+					splitPane.setLeftComponent(jspa);
+
+					boxaa.remove(replaceRegexField);
+					boxaa.remove(replaceRegexLabel);
+					boxaa.validate();
+
+					listener.setDoReplace(true);
 				}
 			}
 		});
