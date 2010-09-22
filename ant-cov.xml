@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="regexerator" default="coverity" basedir=".">
+	<description>
+        Coverty build file for regexerator
+    </description>
+
+	<!-- set global properties for this build -->
+	<property name="src" location="src" />
+	<property name="bin" location="ant-bin" />
+	<property name="cov-bin" location="cov-bin" />
+	<property name="dist" location="dist" />
+	<property name="lib" location="" />
+	<property name="cov-int-dir" location="cov-int-dir" />
+
+	<target name="cov-compile" description="compile the source ">
+		<mkdir dir="${cov-bin}" />
+		<javac srcdir="${src}" destdir="${cov-bin}" extdirs="${lib}" debug="on" />
+	</target>
+
+	<property name="anttask.jar" value="C:/Program Files/Coverity/Coverity Static Analysis/library/coverity-anttask.jar" />
+
+	<target name="cov-loadtask">
+		<taskdef resource="com/coverity/anttask.xml" classpath="${anttask.jar}" />
+	</target>
+
+	<target name="cov-analyze" depends="cov-loadtask,cov-compile">
+		<covanalyzejava dir="${cov-int-dir}" classfiles="${cov-bin}" findsource="${src}" findjars="${lib}" additionaloptions="--all" />
+	</target>
+
+	<target name="cov-commit" depends="cov-loadtask">
+		<covcommitdefects dir="${cov-int-dir}" stream="${ant.project.name}" remote="localhost" user="admin" password="123456">
+		</covcommitdefects>
+	</target>
+
+	<target name="coverity" depends="cov-loadtask,cov-analyze,cov-commit">
+	</target>
+</project>

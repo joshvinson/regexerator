@@ -54,27 +54,4 @@
 	<target name="clean-dist" description="clean dist folder">
 		<delete dir="${dist}" />
 	</target>
-
-	<target name="cov-compile" depends="init" description="compile the source ">
-		<mkdir dir="${cov-bin}" />
-		<javac srcdir="${src}" destdir="${cov-bin}" extdirs="${lib}" debug="on" />
-	</target>
-
-	<property name="anttask.jar" value="C:/Program Files/Coverity/Coverity Static Analysis/library/coverity-anttask.jar" />
-
-	<target name="cov-loadtask">
-		<taskdef resource="com/coverity/anttask.xml" classpath="${anttask.jar}" />
-	</target>
-
-	<target name="cov-analyze" depends="cov-loadtask,cov-compile">
-		<covanalyzejava dir="${cov-int-dir}" classfiles="${cov-bin}" findsource="${src}" findjars="${lib}" additionaloptions="--all" />
-	</target>
-
-	<target name="cov-commit" depends="cov-loadtask">
-		<covcommitdefects dir="${cov-int-dir}" stream="${ant.project.name}" remote="localhost" user="admin" password="123456">
-		</covcommitdefects>
-	</target>
-
-	<target name="coverity" depends="cov-loadtask,cov-analyze,cov-commit">
-	</target>
 </project>
