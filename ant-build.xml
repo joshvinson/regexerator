@@ -7,10 +7,7 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="src" />
 	<property name="bin" location="ant-bin" />
-	<property name="cov-bin" location="cov-bin" />
 	<property name="dist" location="dist" />
-	<property name="lib" location="" />
-	<property name="cov-int-dir" location="cov-int-dir" />
 
 	<target name="init">
 		<!-- Create the time stamp -->
@@ -47,8 +44,6 @@
 
 	<target name="clean" description="clean output folders">
 		<delete dir="${bin}" />
-		<delete dir="${cov-bin}" />
-		<delete dir="${cov-int-dir}" />
 	</target>
 
 	<target name="clean-dist" description="clean dist folder">
