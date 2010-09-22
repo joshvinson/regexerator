@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Regexerator" default="clean" basedir=".">
+<project name="regexerator" default="clean" basedir=".">
 	<description>
-        Build file for Regexerator
+        Build file for regexerator
     </description>
 
 	<!-- set global properties for this build -->
@@ -32,7 +32,7 @@
 
 		<!-- Create executable jar -->
 		<!-- Put everything in ${build} into the ${ant.project.name}-${DSTAMP}.jar file -->
-		<jar jarfile="${dist}/${ant.project.name}-${DSTAMP}-${TSTAMP}.jar">
+		<jar jarfile="${dist}/${ant.project.name}.jar">
 			<fileset dir="${bin}" />
 
 			<manifest>
@@ -42,7 +42,7 @@
 		</jar>
 
 		<!-- Create source zip file -->
-		<zip destfile="${dist}/${ant.project.name}-${DSTAMP}-${TSTAMP}-src.zip" basedir="${src}" />
+		<zip destfile="${dist}/${ant.project.name}-src.zip" basedir="${src}" />
 	</target>
 
 	<target name="clean" description="clean output folders">

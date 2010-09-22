@@ -15,9 +15,7 @@ public class RXR
 	static
 	{
 		properties.setProperty("rxr.programName", "Regexerator");
-		properties.setProperty("rxr.author", "Josh Vinson");
 		properties.setProperty("rxr.release.version", "0.1");
-		properties.setProperty("rxr.release.year", "2010");
 	}
 
 	public static JFrame window;
