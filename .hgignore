@@ -7,3 +7,6 @@ syntax: regexp
 ^dist$
 syntax: regexp
 ^cov-.*$
+
+syntax: regexp
+^ant-cov\.xml$
