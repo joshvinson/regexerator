@@ -31,6 +31,7 @@
 		<!-- Put everything in ${build} into the ${ant.project.name}-${DSTAMP}.jar file -->
 		<jar jarfile="${dist}/${ant.project.name}.jar">
 			<fileset dir="${bin}" />
+			<fileset file="LICENSE" />
 
 			<manifest>
 				<attribute name="Main-Class" value="rxr.RXR" />
@@ -39,7 +40,9 @@
 		</jar>
 
 		<!-- Create source zip file -->
-		<zip destfile="${dist}/${ant.project.name}-src.zip" basedir="${src}" />
+		<zip destfile="${dist}/${ant.project.name}-src.zip" basedir="${src}">
+			<fileset file="LICENSE" />
+		</zip>
 	</target>
 
 	<target name="clean" description="clean output folders">
