@@ -22,7 +22,7 @@
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac srcdir="${src}" destdir="${bin}" extdirs="${lib}" />
 		<copy todir="${bin}">
-			<fileset dir="${src}" includes="**/*.gif,**/*.png" />
+			<fileset dir="${src}" includes="res/**" />
 		</copy>
 	</target>
 

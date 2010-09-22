@@ -1,0 +1,5 @@
+%rxr.programName% Help
+
+Tips:
+-Select a match or group in the match tree to highlight it in the text pane.
+-In the replace box, you can use group references like $1

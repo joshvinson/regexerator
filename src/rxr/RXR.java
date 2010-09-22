@@ -1,16 +1,32 @@
 package rxr;
 
 import java.net.*;
+import java.util.*;
 
 import javax.swing.*;
 
+import rxr.action.*;
 import rxr.util.*;
 
 public class RXR
 {
+	public static final Properties properties = new Properties();
+
+	static
+	{
+		properties.setProperty("rxr.programName", "Regexerator");
+		properties.setProperty("rxr.author", "Josh Vinson");
+		properties.setProperty("rxr.release.version", "0.1");
+		properties.setProperty("rxr.release.year", "2010");
+	}
+
+	public static JFrame window;
+
 	/**
 	 * Entry point into regexerator.
-	 * @param args not used
+	 * 
+	 * @param args
+	 *            not used
 	 */
 	public static void main(String[] args)
 	{
@@ -25,14 +41,46 @@ public class RXR
 
 		MainPanel main = new MainPanel();
 
-		JFrame window = new JFrame("Regexerator");
+		window = new JFrame("Regexerator");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		window.setJMenuBar(createMenuBar());
 
 		window.add(main);
 
 		window.setSize(600, 400);
 		Util.Window.center(window);
 		window.setVisible(true);
+	}
+
+	public static JMenuBar createMenuBar()
+	{
+		JMenuBar menu = new JMenuBar();
+
+		//top level
+		JMenu file = new JMenu("File");
+		JMenu help = new JMenu("Help");
+
+		//file
+		JMenuItem quit = new JMenuItem(new QuitAction());
+
+		//file - add
+		file.add(quit);
+
+		//help
+		JMenuItem helpItem = new JMenuItem(new HelpAction());
+		JMenuItem about = new JMenuItem(new AboutAction());
+
+		//help - add
+		help.add(helpItem);
+		help.add(new JSeparator());
+		help.add(about);
+
+		//add top
+		menu.add(file);
+		menu.add(help);
+
+		return menu;
 	}
 
 	/**

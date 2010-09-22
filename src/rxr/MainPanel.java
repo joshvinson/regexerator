@@ -35,11 +35,11 @@ public class MainPanel extends JPanel
 	public MainPanel()
 	{
 		//--icons init--
-		final ImageIcon startIcon = new ImageIcon(RXR.load("media/19127.thread_view.gif"));
-		final ImageIcon doneIcon = new ImageIcon(RXR.load("media/14073.complete_status.gif"));
-		final ImageIcon errorIcon = new ImageIcon(RXR.load("media/10448.error_obj.gif"));
-		final ImageIcon runIcon = new ImageIcon(RXR.load("media/17155.run_exc.png"));
-		final ImageIcon waitingIcon = new ImageIcon(RXR.load("media/13437.elipses.gif"));
+		final ImageIcon startIcon = new ImageIcon(RXR.load("res/media/19127.thread_view.gif"));
+		final ImageIcon doneIcon = new ImageIcon(RXR.load("res/media/14073.complete_status.gif"));
+		final ImageIcon errorIcon = new ImageIcon(RXR.load("res/media/10448.error_obj.gif"));
+		final ImageIcon runIcon = new ImageIcon(RXR.load("res/media/17155.run_exc.png"));
+		final ImageIcon waitingIcon = new ImageIcon(RXR.load("res/media/13437.elipses.gif"));
 
 		//--components init--
 		regexField = new JTextField();
