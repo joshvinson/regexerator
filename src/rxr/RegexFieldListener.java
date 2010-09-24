@@ -10,7 +10,7 @@ import javax.swing.text.*;
 import javax.swing.text.Highlighter.HighlightPainter;
 
 import rxr.RegexEventListener.Type;
-import rxr.ext.*;
+import rxr.util.*;
 
 /**
  * RegexFieldListener listens for changes in a Document, and reapplies a regular
@@ -234,7 +234,8 @@ class RegexFieldListener implements DocumentListener
 			{
 				try
 				{
-					HighlightPainter ghp = new UnderlineHighlighter(cs[j]).getPainter();
+					HighlightPainter ghp = new UnderlineHighlightPainter(cs[j]);
+					//HighlightPainter ghp = new UnderlineHighlighter(cs[j]).getPainter();
 					h.addHighlight(gs[j][0], gs[j][1], ghp);
 				}
 				catch(Exception e)

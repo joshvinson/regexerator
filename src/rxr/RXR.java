@@ -15,7 +15,8 @@ public class RXR
 	static
 	{
 		properties.setProperty("rxr.programName", "Regexerator");
-		properties.setProperty("rxr.release.version", "0.1");
+		properties.setProperty("rxr.release.version", "0.2");
+		properties.setProperty("rxr.homepage", "https://sourceforge.net/projects/regexerator/");
 	}
 
 	public static JFrame window;
