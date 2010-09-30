@@ -178,116 +178,6 @@ public class Util
 
 	public static class PLAF
 	{
-		private final static ArrayList<LAFInfo> LAFs = new ArrayList<LAFInfo>();
-
-		static
-		{
-			//Sun Mac OS Look and Feel
-			LAFs.add(new LAFInfo("Mac OS", "com.sun.java.swing.plaf.mac.MacLookAndFeel"));
-
-			//Sun Metal Look and Feel
-			LAFs.add(new LAFInfo("Metal", "javax.swing.plaf.metal.MetalLookAndFeel"));
-
-			//Sun CDE/Motif Look and Feel
-			LAFs.add(new LAFInfo("CDE/Motif", "com.sun.java.swing.plaf.motif.MotifLookAndFeel"));
-
-			//Sun Windows Look and Feel
-			LAFs.add(new LAFInfo("Windows", "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"));
-
-			//Sun Windows Classic Look and Feel
-			LAFs.add(new LAFInfo("Windows Classic", "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel"));
-
-			//Sun GTK Look and Feel
-			LAFs.add(new LAFInfo("GTK", "com.sun.java.swing.plaf.gtk.GTKLookAndFeel"));
-
-			//GTK/Swing Look and Feel (http://gtkswing.sourceforge.net)
-			LAFs.add(new LAFInfo("GTKSwing", "org.gtk.java.swing.plaf.gtk.GtkLookAndFeel"));
-
-			//Liquid Look and Feel (http://liquidlnf.sourceforge.net)
-			LAFs.add(new LAFInfo("Liquid", "com.birosoft.liquid.LiquidLookAndFeel"));
-
-			//Kunststoff Look and Feel (http://www.incors.org)
-			LAFs.add(new LAFInfo("Kunststoff", "com.incors.plaf.kunststoff.KunststoffLookAndFeel"));
-
-			//XP Look and Feel (http://www.stefan-krause.com/java)
-			LAFs.add(new LAFInfo("XP", "com.stefankrause.xplookandfeel.XPLookAndFeel"));
-
-			//JGoodies Windows Look and Feel (http://www.jgoodies.com)
-			LAFs.add(new LAFInfo("JGoodies Windows", "com.jgoodies.looks.windows.WindowsLookAndFeel"));
-
-			//JGoodies Plastic Look and Feel (http://www.jgoodies.com)
-			LAFs.add(new LAFInfo("JGoodies Plastic", "com.jgoodies.looks.plastic.PlasticLookAndFeel"));
-
-			//JGoodies Plastic 3D Look and Feel (http://www.jgoodies.com)
-			LAFs.add(new LAFInfo("JGoodies Plastic 3D", "com.jgoodies.looks.plastic.Plastic3DLookAndFeel"));
-
-			//JGoodies Plastic XP Look and Feel (http://www.jgoodies.com)
-			LAFs.add(new LAFInfo("JGoodies Plastic XP", "com.jgoodies.looks.plastic.PlasticXPLookAndFeel"));
-
-			//install LAFs that aren't installed, but are available, from list
-			for(int i = 0; i < LAFs.size(); i++)
-			{
-				String name = ((LAFInfo)LAFs.get(i)).name;
-				String className = ((LAFInfo)LAFs.get(i)).className;
-				try
-				{
-					//is class visible?
-					Class.forName(className);
-
-					//if we get here, it is
-					boolean add = true;
-
-					for(LAFInfo j : LAFs)
-					{
-						if(j.name.equals(name))
-						{
-							add = false;
-						}
-					}
-
-					if(add)
-					{
-						installLAF(name);
-					}
-				}
-				catch(ClassNotFoundException e)
-				{
-					//cannot find class - not installed or available, so do nothing
-				}
-			}
-		}
-
-		public static String getLAFClass(String name)
-		{
-			for(int i = 0; i < LAFs.size(); i++)
-			{
-				if(name.equals(((LAFInfo)LAFs.get(i)).name))
-				{
-					return ((LAFInfo)LAFs.get(i)).className;
-				}
-			}
-			return null;
-		}
-
-		public static String[] getLAFNames()
-		{
-			String[] names = new String[LAFs.size()];
-			for(int i = 0; i < LAFs.size(); i++)
-			{
-				names[i] = ((LAFInfo)LAFs.get(i)).name;
-			}
-			return names;
-		}
-
-		public static String[] getLAFClassNames()
-		{
-			String[] names = new String[LAFs.size()];
-			for(int i = 0; i < LAFs.size(); i++)
-			{
-				names[i] = ((LAFInfo)LAFs.get(i)).className;
-			}
-			return names;
-		}
 
 		public static String[] getInstalledLAFNames()
 		{
@@ -298,6 +188,19 @@ public class Util
 				result[i] = installed[i].getName();
 			}
 			return result;
+		}
+		
+		public static String getLAFClass(String name)
+		{
+			UIManager.LookAndFeelInfo[] installed = UIManager.getInstalledLookAndFeels();
+			for(int i = 0; i < installed.length; i++)
+			{
+				if(installed[i].getName().equals(name))
+				{
+					return installed[i].getClassName();
+				}
+			}
+			return null;
 		}
 
 		public static boolean setCurrentLAFName(JFrame window, String name)
@@ -314,7 +217,8 @@ public class Util
 			}
 
 			SwingUtilities.updateComponentTreeUI(window);
-			window.pack(); //resizes components according to new LnF
+			//window.pack(); //resizes components according to new LnF
+			window.getContentPane().validate();
 			return true;
 		}
 
@@ -332,7 +236,8 @@ public class Util
 			}
 
 			SwingUtilities.updateComponentTreeUI(window);
-			window.pack(); //resizes components according to new LnF
+			//window.pack(); //resizes components according to new LnF
+			window.getContentPane().validate();
 			return true;
 		}
 
@@ -375,7 +280,7 @@ public class Util
 
 		public static String getCurrentLAFClassName()
 		{
-			return getLAFClass(UIManager.getLookAndFeel().getName());
+			return UIManager.getLookAndFeel().getClass().getName();
 		}
 
 		public static boolean isInstalledLAFName(String name)
@@ -414,22 +319,21 @@ public class Util
 			JMenu lnf = new JMenu(title, true);
 
 			ButtonGroup buttonGroup = new ButtonGroup();
+			
+			UIManager.LookAndFeelInfo[] installed = UIManager.getInstalledLookAndFeels();
 
-			final String[] names = getLAFNames();
-			final String[] classNames = getLAFClassNames();
-
-			for(int i = 0; i < names.length; i++)
+			for(int i = 0; i < installed.length; i++)
 			{
-				JRadioButtonMenuItem item = new JRadioButtonMenuItem(names[i], getCurrentLAFName().equals(names[i]));
+				JRadioButtonMenuItem item = new JRadioButtonMenuItem(installed[i].getName(), getCurrentLAFClassName().equals(installed[i].getClassName()));
 				if(showDisabled)
 				{
-					item.setEnabled(isInstalledLAFName(names[i]));
+					item.setEnabled(isInstalledLAFName(installed[i].getName()));
 				}
-				else if(!isInstalledLAFName(names[i]))
+				else if(!isInstalledLAFName(installed[i].getName()))
 				{
 					continue;
 				}
-				final String className = classNames[i];
+				final String className = installed[i].getClassName();
 
 				item.addActionListener(new ActionListener()
 				{
@@ -449,18 +353,6 @@ public class Util
 		public static void reloadLAF()
 		{
 			setCurrentLAFName(getCurrentLAFName());
-		}
-
-		protected static class LAFInfo
-		{
-			String name;
-			String className;
-
-			public LAFInfo(String name, String className)
-			{
-				this.name = name;
-				this.className = className;
-			}
 		}
 	}
 

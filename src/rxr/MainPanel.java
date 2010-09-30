@@ -74,6 +74,9 @@ public class MainPanel extends JPanel
 				}
 			}
 		});
+		
+		textField.setBackground(Color.WHITE);
+		replaceField.setBackground(Color.WHITE);
 
 		matchTree = new MatchTree(listener);
 

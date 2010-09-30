@@ -16,7 +16,7 @@ public class RXR
 	{
 		properties.setProperty("rxr.programName", "Regexerator");
 		properties.setProperty("rxr.release.version", "0.2");
-		properties.setProperty("rxr.homepage", "https://sourceforge.net/projects/regexerator/");
+		properties.setProperty("rxr.homepage", "http://sourceforge.net/projects/regexerator/");
 	}
 
 	public static JFrame window;
@@ -31,7 +31,7 @@ public class RXR
 	{
 		try
 		{
-			Util.PLAF.setCurrentLAFName("Windows");
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}
 		catch(Exception e)
 		{
@@ -77,6 +77,7 @@ public class RXR
 
 		//add top
 		menu.add(file);
+		menu.add(Util.PLAF.makeLAFMenu(window));
 		menu.add(help);
 
 		return menu;
