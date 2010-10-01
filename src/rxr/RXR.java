@@ -8,6 +8,12 @@ import javax.swing.*;
 import rxr.action.*;
 import rxr.util.*;
 
+/*
+ * TODO: Custom progress bar UI
+ * TODO: interrupt match thread on edit DONE
+ * TODO: highlight in replace pane
+ */
+
 public class RXR
 {
 	public static final Properties properties = new Properties();
@@ -15,7 +21,7 @@ public class RXR
 	static
 	{
 		properties.setProperty("rxr.programName", "Regexerator");
-		properties.setProperty("rxr.release.version", "0.2");
+		properties.setProperty("rxr.release.version", "0.3");
 		properties.setProperty("rxr.homepage", "http://sourceforge.net/projects/regexerator/");
 	}
 
@@ -77,7 +83,7 @@ public class RXR
 
 		//add top
 		menu.add(file);
-		menu.add(Util.PLAF.makeLAFMenu(window));
+		//menu.add(Util.PLAF.makeLAFMenu(window));
 		menu.add(help);
 
 		return menu;

@@ -9,8 +9,8 @@ interface RegexEventListener
 {
 	public enum Type
 	{
-		RECALC_START, RECALC_COMPLETE, BAD_PATTERN, BAD_REPLACE,
+		RECALC_START, RECALC_COMPLETE, BAD_PATTERN, BAD_REPLACE, RECALC_PROGRESS,
 	};
 
-	public void regexEvent(RegexEventListener.Type t);
+	public void regexEvent(Type t);
 }

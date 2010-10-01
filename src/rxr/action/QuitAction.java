@@ -10,7 +10,7 @@ public class QuitAction extends AbstractAction
 	{
 		super("Quit");
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{

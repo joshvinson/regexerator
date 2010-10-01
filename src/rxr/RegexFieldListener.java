@@ -31,11 +31,18 @@ class RegexFieldListener implements DocumentListener
 	protected ArrayList<int[][]> groups;
 	protected ArrayList<Color[]> groupColors;
 
+	protected String sourceText;
+	protected String replaceResult;
+
 	protected boolean autoRecalc = true;
 
 	boolean doReplace = false;
 
 	protected Object selectHighlightHandle;
+
+	protected int progress;
+
+	Thread thread;
 
 	/**
 	 * Creates a RegexFieldListener that takes a regex from source, and applies
@@ -58,55 +65,95 @@ class RegexFieldListener implements DocumentListener
 	/**
 	 * Grabs a regex string from the source component, attempts to compile it,
 	 * and call recalcTarget(). At least regex events will be sent to listeners
-	 * during the execution of this method: RECALC_START at the beginning, and
-	 * either BAD_PATTERN or RECALC_COMPLETE depending on the result.
+	 * during the execution of this method.
 	 */
 	public void regex()
 	{
-		fireRegexEvent(Type.RECALC_START);
-
-		final String regex = source.getText();
-
-		/*if(regex.equals(""))
+		if(thread != null && thread.isAlive())
 		{
-			//reset target
-			recalcTarget(null);
-			//not doing any matching, but we know the result of the replace, so just do that.
-			replaceTarget.setText(target.getText());
-			return;
-		}*/
-
-		SwingUtilities.invokeLater(new Runnable()
+			thread.stop();
+			reset();
+			fireRegexEvent(Type.RECALC_START);
+		}
+		thread = new Thread()
 		{
 			@Override
 			public void run()
 			{
-				try
+				setPriority(MIN_PRIORITY);
+				fireRegexEvent(Type.RECALC_START);
+
+				final String regex = source.getText();
+
+				//don't bother with empty regex
+				if(regex.equals(""))
 				{
-					Pattern p = Pattern.compile(regex);
-					Matcher m = p.matcher(target.getDocument().getText(0, target.getDocument().getLength()));
-					try
-					{
-						recalcTarget(m);
-					}
-					catch(Exception e)
-					{
-						//recalcTarget(null);
-						replaceTarget.setText(target.getText());
-						fireRegexEvent(Type.BAD_REPLACE);
-						return;
-					}
-				}
-				catch(Exception e)
-				{
-					recalcTarget(null);
-					replaceTarget.setText(target.getText());
+					reset();
+					update();
+					progress = 0;
+					fireRegexEvent(Type.RECALC_PROGRESS);
 					fireRegexEvent(Type.BAD_PATTERN);
 					return;
 				}
 
+				Pattern p;
+				Matcher m;
+
+				//attempt to compile pattern
+				try
+				{
+					p = Pattern.compile(regex);
+				}
+				catch(Exception e)
+				{
+					//pattern was invalid, so clear data, then update ui
+					reset();
+					update();
+					progress = 0;
+					fireRegexEvent(Type.RECALC_PROGRESS);
+					fireRegexEvent(Type.BAD_PATTERN);
+					return;
+				}
+
+				//pattern is good, so try the match
+				try
+				{
+					sourceText = target.getDocument().getText(0, target.getDocument().getLength());
+					m = p.matcher(sourceText);
+				}
+				catch(BadLocationException e)
+				{
+					//should never get here
+					Util.Window.error(e, "Error getting test text from component", false);
+					reset();
+					update();
+					return;
+				}
+
+				//matcher is good, so grab the matching data and try the replace (if doReplace)
+				boolean result = recalc(m);
+
+				if(result)
+				{
+					//replace was successful
+					update();
+					fireRegexEvent(Type.RECALC_COMPLETE);
+					return;
+				}
+				else
+				{
+					//replace failed
+					reset();
+					update();
+					progress = 0;
+					fireRegexEvent(Type.RECALC_PROGRESS);
+					fireRegexEvent(Type.BAD_REPLACE);
+					return;
+				}
+
 			}
-		});
+		};
+		thread.start();
 	}
 
 	/**
@@ -148,6 +195,17 @@ class RegexFieldListener implements DocumentListener
 	}
 
 	/**
+	 * Deletes any match data that has been collected.
+	 */
+	protected void reset()
+	{
+		matches = new ArrayList<int[]>();
+		groups = new ArrayList<int[][]>();
+		groupColors = new ArrayList<Color[]>();
+		replaceResult = "";
+	}
+
+	/**
 	 * Recalculate the matches, groups, and groupColors lists based on the data
 	 * in m. Matches and groups are calculated from m by removing group 0 and
 	 * making that the match for that match number. The groups list is
@@ -156,33 +214,18 @@ class RegexFieldListener implements DocumentListener
 	 * @param m
 	 *            the Matcher object to get match and group data from
 	 */
-	protected void recalcTarget(Matcher m)
+	protected boolean recalc(Matcher m)
 	{
-		selectHighlightHandle = null;
-		Highlighter h = target.getHighlighter();
-
-		//remove formatting
-		try
-		{
-			h.removeAllHighlights();
-		}
-		catch(Exception e)
-		{
-			return;
-		}
-
-		if(m == null)
-		{
-			fireRegexEvent(Type.RECALC_COMPLETE);
-			return;
-		}
-
 		matches = new ArrayList<int[]>();
 		groups = new ArrayList<int[][]>();
 		groupColors = new ArrayList<Color[]>();
 
 		StringBuffer replaceSB = new StringBuffer();
 		String replaceStr = replaceSource.getText();
+
+		int prevProgress = 0;
+		progress = 0;
+		fireRegexEvent(Type.RECALC_PROGRESS);
 
 		while(m.find())
 		{
@@ -205,15 +248,64 @@ class RegexFieldListener implements DocumentListener
 
 			if(doReplace)
 			{
-				m.appendReplacement(replaceSB, replaceStr);
+				try
+				{
+					m.appendReplacement(replaceSB, replaceStr);
+				}
+				catch(Exception e)
+				{
+					return false;
+				}
+			}
+
+			progress = 100 * m.end() / sourceText.length();
+			if(progress != prevProgress)
+			{
+				fireRegexEvent(Type.RECALC_PROGRESS);
+				prevProgress = progress;
 			}
 		}
 		m.appendTail(replaceSB);
-		replaceTarget.setText(replaceSB.toString());
 
-		doHighlight();
+		replaceResult = replaceSB.toString();
 
-		fireRegexEvent(Type.RECALC_COMPLETE);
+		progress = 100;
+		fireRegexEvent(Type.RECALC_PROGRESS);
+
+		return true;
+	}
+
+	/**
+	 * Updates target and replaceTarget with the current match data. target is
+	 * rehighlighted, and replaceTarget is filled with the result of the
+	 * replacement.
+	 */
+	protected void update()
+	{
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				//fill replaceTarget
+				replaceTarget.setText(replaceResult);
+
+				selectHighlightHandle = null;
+				Highlighter h = target.getHighlighter();
+
+				//remove formatting
+				try
+				{
+					h.removeAllHighlights();
+				}
+				catch(Exception e)
+				{
+					return;
+				}
+
+				doHighlight();
+			}
+		});
 	}
 
 	/**

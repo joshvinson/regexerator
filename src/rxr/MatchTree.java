@@ -17,7 +17,7 @@ public class MatchTree extends JTree implements RegexEventListener
 
 	MatchTreeModel model;
 
-	boolean autoExpand = false;
+	boolean autoExpand = true;
 
 	public MatchTree(RegexFieldListener listener)
 	{
@@ -182,16 +182,14 @@ public class MatchTree extends JTree implements RegexEventListener
 		{
 			if(parent == this)
 			{
-				return matchNodes.get(index);
+				if(matchNodes.size() > index)
+					return matchNodes.get(index);
 			}
 			else if(parent instanceof MatchNode)
 			{
 				return ((MatchNode)parent).groups.get(index);
 			}
-			else
-			{
-				return null;
-			}
+			return null;
 		}
 
 		@Override
@@ -369,7 +367,7 @@ public class MatchTree extends JTree implements RegexEventListener
 			public void paintIcon(Component c, Graphics g, int x, int y)
 			{
 				((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-				Color gc = new Color(color.getRed(), color.getGreen(), color.getBlue(), 255 - color.getBlue()/3);
+				Color gc = new Color(color.getRed(), color.getGreen(), color.getBlue(), 255 - color.getBlue() / 3);
 				g.setColor(gc);
 				//g.setColor(color);
 				g.fillOval(x + 1, y + 1, 14, 14);

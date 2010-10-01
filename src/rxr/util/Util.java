@@ -178,7 +178,6 @@ public class Util
 
 	public static class PLAF
 	{
-
 		public static String[] getInstalledLAFNames()
 		{
 			UIManager.LookAndFeelInfo[] installed = UIManager.getInstalledLookAndFeels();
@@ -189,7 +188,7 @@ public class Util
 			}
 			return result;
 		}
-		
+
 		public static String getLAFClass(String name)
 		{
 			UIManager.LookAndFeelInfo[] installed = UIManager.getInstalledLookAndFeels();
@@ -319,7 +318,7 @@ public class Util
 			JMenu lnf = new JMenu(title, true);
 
 			ButtonGroup buttonGroup = new ButtonGroup();
-			
+
 			UIManager.LookAndFeelInfo[] installed = UIManager.getInstalledLookAndFeels();
 
 			for(int i = 0; i < installed.length; i++)
@@ -361,7 +360,8 @@ public class Util
 		public static ClipboardOwner owner;
 
 		/**
-		 * Place a String on the clipboard, and make this class the owner of the Clipboard's contents.
+		 * Place a String on the clipboard, and make this class the owner of the
+		 * Clipboard's contents.
 		 */
 		public static void setClipboardContents(String str)
 		{
@@ -373,7 +373,8 @@ public class Util
 		/**
 		 * Get the String residing on the clipboard.
 		 * 
-		 * @return any text found on the Clipboard; if none found, return an empty String.
+		 * @return any text found on the Clipboard; if none found, return an
+		 *         empty String.
 		 */
 		public static String getClipboardContents()
 		{
@@ -399,6 +400,18 @@ public class Util
 				}
 			}
 			return result;
+		}
+
+		public static void sleep(int m)
+		{
+			try
+			{
+				Thread.sleep(m);
+			}
+			catch(Exception e)
+			{
+				//
+			}
 		}
 	}
 

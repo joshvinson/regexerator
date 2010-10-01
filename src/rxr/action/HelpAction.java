@@ -20,7 +20,7 @@ public class HelpAction extends AbstractAction
 	{
 		try
 		{
-			BufferedReader in = new BufferedReader(new InputStreamReader(RXR.load("res/txt/help").openStream()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(RXR.load("res/txt/help").openStream(), "Cp1252"));
 
 			Pattern p = Pattern.compile("%([^%]+)%");
 
