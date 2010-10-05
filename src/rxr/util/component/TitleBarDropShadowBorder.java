@@ -9,6 +9,8 @@ import javax.swing.border.*;
  */
 public class TitleBarDropShadowBorder extends CompoundBorder
 {
+	private static final long serialVersionUID = 4869619476421638844L;
+
 	protected TitleBarBorder titleBarBorder;
 	protected DropShadowBorder dropShadowBorder;
 

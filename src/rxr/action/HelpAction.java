@@ -10,6 +10,8 @@ import rxr.*;
 
 public class HelpAction extends AbstractAction
 {
+	private static final long serialVersionUID = 5277795480958338358L;
+
 	public HelpAction()
 	{
 		super("Help");
@@ -31,7 +33,7 @@ public class HelpAction extends AbstractAction
 				Matcher m = p.matcher(line);
 				while(m.find())
 				{
-					String rep = RXR.properties.getProperty(m.group(1));
+					String rep = RXR.props.getProperty(m.group(1));
 					m.appendReplacement(text, rep == null ? "[invalid property]" : rep);
 				}
 				m.appendTail(text);

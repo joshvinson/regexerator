@@ -13,6 +13,8 @@ import rxr.MatchTree.MatchTreeModel.MatchNode;
 
 public class MatchTree extends JTree implements RegexEventListener
 {
+	private static final long serialVersionUID = -8383028514332625758L;
+
 	RegexFieldListener listener;
 
 	MatchTreeModel model;
@@ -335,6 +337,10 @@ public class MatchTree extends JTree implements RegexEventListener
 	 */
 	static class MatchTreeNodeRenderer extends DefaultTreeCellRenderer
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3491427615572210396L;
 		static ColorIcon groupIcon = new ColorIcon();
 
 		public MatchTreeNodeRenderer()

@@ -10,6 +10,8 @@ import javax.swing.border.*;
  */
 public class TitleBarBorder extends AbstractBorder
 {
+	private static final long serialVersionUID = 6374387987537426517L;
+	
 	String label;
 	ImageIcon icon;
 

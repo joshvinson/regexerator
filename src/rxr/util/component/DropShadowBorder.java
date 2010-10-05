@@ -9,6 +9,8 @@ import javax.swing.border.*;
  */
 public class DropShadowBorder extends AbstractBorder
 {
+	private static final long serialVersionUID = -6856077294038944134L;
+	
 	private static final Color DARK_COLOR = new Color(132, 130, 132);
 	private static final Color MED_COLOR = new Color(143, 141, 138);
 	private static final Color LIGHT_COLOR = new Color(171, 168, 165);

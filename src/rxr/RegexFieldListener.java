@@ -67,10 +67,13 @@ class RegexFieldListener implements DocumentListener
 	 * and call recalcTarget(). At least regex events will be sent to listeners
 	 * during the execution of this method.
 	 */
+	@SuppressWarnings("deprecation")
 	public void regex()
 	{
 		if(thread != null && thread.isAlive())
 		{
+			//use of Thread.stop() is intended here, and (as far as I can tell)
+			//won't cause any problems.
 			thread.stop();
 			reset();
 			fireRegexEvent(Type.RECALC_START);

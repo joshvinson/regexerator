@@ -9,21 +9,15 @@ import rxr.action.*;
 import rxr.util.*;
 
 /*
- * TODO: Custom progress bar UI
+ * TODO: Custom progress bar UI DONE
  * TODO: interrupt match thread on edit DONE
  * TODO: highlight in replace pane
+ * TODO: reset results while matching?
  */
 
 public class RXR
 {
-	public static final Properties properties = new Properties();
-
-	static
-	{
-		properties.setProperty("rxr.programName", "Regexerator");
-		properties.setProperty("rxr.release.version", "0.3");
-		properties.setProperty("rxr.homepage", "http://sourceforge.net/projects/regexerator/");
-	}
+	public static final Properties props = new Properties();
 
 	public static JFrame window;
 
@@ -35,6 +29,15 @@ public class RXR
 	 */
 	public static void main(String[] args)
 	{
+		try
+		{
+			props.load(load("res/props/rxr.properties").openStream());
+		}
+		catch(Exception e)
+		{
+			Util.Window.error(e, "Cannot load properties file", true);
+		}
+		
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

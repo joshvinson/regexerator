@@ -12,6 +12,8 @@ import rxr.util.component.*;
 
 public class MainPanel extends JPanel
 {
+	private static final long serialVersionUID = -4238061796428182229L;
+	
 	//components
 	JTextField regexField;
 	JTextPane textField;
