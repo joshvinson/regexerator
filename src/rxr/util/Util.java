@@ -11,9 +11,6 @@ import javax.swing.border.*;
 
 import rxr.util.component.*;
 
-/**
- * @author Josh Vinson
- */
 public class Util
 {
 	public static class Color

@@ -29,7 +29,9 @@ class RegexFieldListener implements DocumentListener
 
 	protected ArrayList<int[]> matches;
 	protected ArrayList<int[][]> groups;
-	protected ArrayList<Color[]> groupColors;
+	Color[] groupColors;
+	protected ArrayList<int[]> replaces;
+	protected ArrayList<ArrayList<int[]>> replaceGroups;
 
 	protected String sourceText;
 	protected String replaceResult;
@@ -204,7 +206,9 @@ class RegexFieldListener implements DocumentListener
 	{
 		matches = new ArrayList<int[]>();
 		groups = new ArrayList<int[][]>();
-		groupColors = new ArrayList<Color[]>();
+		groupColors = null;
+		replaces = new ArrayList<int[]>();
+		replaceGroups = new ArrayList<ArrayList<int[]>>();
 		replaceResult = "";
 	}
 
@@ -221,7 +225,10 @@ class RegexFieldListener implements DocumentListener
 	{
 		matches = new ArrayList<int[]>();
 		groups = new ArrayList<int[][]>();
-		groupColors = new ArrayList<Color[]>();
+		replaces = new ArrayList<int[]>();
+		replaceGroups = new ArrayList<ArrayList<int[]>>();
+
+		groupColors = null;
 
 		StringBuffer replaceSB = new StringBuffer();
 		String replaceStr = replaceSource.getText();
@@ -238,22 +245,33 @@ class RegexFieldListener implements DocumentListener
 			matches.add(new int[] {m.start(), m.end()});
 
 			int[][] current = new int[groupCount][];
-			Color[] ccolors = new Color[groupCount];
 
 			for(int i = 0; i < groupCount; i++)
 			{
-				ccolors[i] = Color.getHSBColor(i / (float)groupCount, 1f, 1f);
 				current[i] = new int[] {m.start(i + 1), m.end(i + 1)};
 			}
 
 			groups.add(current);
-			groupColors.add(ccolors);
+			if(groupColors == null)
+			{
+				groupColors = new Color[groupCount];
+				for(int i = 0; i < groupCount; i++)
+				{
+					groupColors[i] = Color.getHSBColor(i / (float)groupCount, 1f, 1f);
+				}
+			}
 
 			if(doReplace)
 			{
 				try
 				{
+					int[] replace = new int[2];
 					m.appendReplacement(replaceSB, replaceStr);
+					int replaceLength = getReplaceString(m, replaceStr).length();
+					replace[0] = replaceSB.length() - replaceLength;
+					replace[1] = replaceSB.length();
+					replaces.add(replace);
+					replaceGroups.add(getReplaceGroups(m, replaceStr, replace[0]));
 				}
 				catch(Exception e)
 				{
@@ -279,6 +297,176 @@ class RegexFieldListener implements DocumentListener
 	}
 
 	/**
+	 * Gets the result of a replacement based on the state in the supplied
+	 * Matcher. The code is copied directly from the appendReplacement method in
+	 * the java.util.regex.Matcher class.
+	 * 
+	 * @param m
+	 *            The Matcher to replace from
+	 * @param replacement
+	 *            the replacement string, which can include group references
+	 *            ($1, etc)
+	 * @return the replacement string with group references replaces by their
+	 *         values
+	 */
+	public String getReplaceString(Matcher m, String replacement)
+	{
+		// Process substitution string to replace group references with groups
+		int cursor = 0;
+		StringBuffer result = new StringBuffer();
+
+		while(cursor < replacement.length())
+		{
+			char nextChar = replacement.charAt(cursor);
+			if(nextChar == '\\')
+			{
+				cursor++;
+				nextChar = replacement.charAt(cursor);
+				result.append(nextChar);
+				cursor++;
+			}
+			else if(nextChar == '$')
+			{
+				// Skip past $
+				cursor++;
+
+				// The first number is always a group
+				int refNum = (int)replacement.charAt(cursor) - '0';
+				if((refNum < 0) || (refNum > 9))
+					throw new IllegalArgumentException("Illegal group reference");
+				cursor++;
+
+				// Capture the largest legal group string
+				boolean done = false;
+				while(!done)
+				{
+					if(cursor >= replacement.length())
+					{
+						break;
+					}
+					int nextDigit = replacement.charAt(cursor) - '0';
+					if((nextDigit < 0) || (nextDigit > 9))
+					{ // not a number
+						break;
+					}
+					int newRefNum = (refNum * 10) + nextDigit;
+					if(m.groupCount() < newRefNum)
+					{
+						done = true;
+					}
+					else
+					{
+						refNum = newRefNum;
+						cursor++;
+					}
+				}
+
+				// Append group
+				if(m.group(refNum) != null)
+					result.append(m.group(refNum));
+			}
+			else
+			{
+				result.append(nextChar);
+				cursor++;
+			}
+		}
+		return result.toString();
+	}
+
+	/**
+	 * Gets the indices of groups in a replacement based on the state in the
+	 * supplied Matcher. The code is copied directly from the appendReplacement
+	 * method in the java.util.regex.Matcher class.
+	 * 
+	 * @param m
+	 *            The Matcher to replace from
+	 * @param replacement
+	 *            the replacement string, which can include group references
+	 *            ($1, etc)
+	 * @param offset
+	 *            the offset to add to indices. Usually this will be the
+	 *            starting index of the match in a larger string.
+	 * @return all the indices of the replacements made. Each entry in the top
+	 *         array is a three entry array. The first entry is the group number
+	 *         (which will never be 0). The second and third are the start and
+	 *         end indices of the replaced group in the result.
+	 */
+	public ArrayList<int[]> getReplaceGroups(Matcher m, String replacement, int offset)
+	{
+		ArrayList<int[]> index = new ArrayList<int[]>();
+
+		// Process substitution string to replace group references with groups
+		int cursor = 0;
+		StringBuffer result = new StringBuffer();
+
+		while(cursor < replacement.length())
+		{
+			char nextChar = replacement.charAt(cursor);
+			if(nextChar == '\\')
+			{
+				cursor++;
+				nextChar = replacement.charAt(cursor);
+				result.append(nextChar);
+				cursor++;
+			}
+			else if(nextChar == '$')
+			{
+				// Skip past $
+				cursor++;
+
+				// The first number is always a group
+				int refNum = (int)replacement.charAt(cursor) - '0';
+				if((refNum < 0) || (refNum > 9))
+					throw new IllegalArgumentException("Illegal group reference");
+				cursor++;
+
+				// Capture the largest legal group string
+				boolean done = false;
+				while(!done)
+				{
+					if(cursor >= replacement.length())
+					{
+						break;
+					}
+					int nextDigit = replacement.charAt(cursor) - '0';
+					if((nextDigit < 0) || (nextDigit > 9))
+					{ // not a number
+						break;
+					}
+					int newRefNum = (refNum * 10) + nextDigit;
+					if(m.groupCount() < newRefNum)
+					{
+						done = true;
+					}
+					else
+					{
+						refNum = newRefNum;
+						cursor++;
+					}
+				}
+
+				// Append group
+				if(m.group(refNum) != null)
+				{
+					int[] entry = new int[3];
+					entry[0] = refNum;
+					entry[1] = offset + result.length();
+					result.append(m.group(refNum));
+					entry[2] = offset + result.length();
+					index.add(entry);
+				}
+			}
+			else
+			{
+				result.append(nextChar);
+				cursor++;
+			}
+		}
+		return index;
+	}
+
+	/**
 	 * Updates target and replaceTarget with the current match data. target is
 	 * rehighlighted, and replaceTarget is filled with the result of the
 	 * replacement.
@@ -295,11 +483,13 @@ class RegexFieldListener implements DocumentListener
 
 				selectHighlightHandle = null;
 				Highlighter h = target.getHighlighter();
+				Highlighter h2 = replaceTarget.getHighlighter();
 
 				//remove formatting
 				try
 				{
 					h.removeAllHighlights();
+					h2.removeAllHighlights();
 				}
 				catch(Exception e)
 				{
@@ -323,13 +513,12 @@ class RegexFieldListener implements DocumentListener
 		for(int i = 0; i < matches.size(); i++)
 		{
 			int[][] gs = groups.get(i);
-			Color[] cs = groupColors.get(i);
 
 			for(int j = 0; j < gs.length; j++)
 			{
 				try
 				{
-					HighlightPainter ghp = new UnderlineHighlightPainter(cs[j]);
+					HighlightPainter ghp = new UnderlineHighlightPainter(groupColors[j]);
 					//HighlightPainter ghp = new UnderlineHighlighter(cs[j]).getPainter();
 					h.addHighlight(gs[j][0], gs[j][1], ghp);
 				}
@@ -348,6 +537,42 @@ class RegexFieldListener implements DocumentListener
 			{
 				e.printStackTrace();
 				return;
+			}
+		}
+
+		h = replaceTarget.getHighlighter();
+
+		for(int i = 0; i < replaces.size(); i++)
+		{
+			try
+			{
+				h.addHighlight(replaces.get(i)[0], replaces.get(i)[1], hp);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		for(int i = 0; i < replaceGroups.size(); i++)
+		{
+			ArrayList<int[]> gs = replaceGroups.get(i);
+
+			for(int j = 0; j < gs.size(); j++)
+			{
+				try
+				{
+					if(gs.get(j)[0] > 0) //ignore whole group reference
+					{
+						HighlightPainter ghp = new UnderlineHighlightPainter(groupColors[gs.get(j)[0] - 1]);
+						h.addHighlight(gs.get(j)[1], gs.get(j)[2], ghp);
+					}
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					return;
+				}
 			}
 		}
 	}
@@ -449,7 +674,7 @@ class RegexFieldListener implements DocumentListener
 	/**
 	 * @return a list of each set of colors used for each group
 	 */
-	public ArrayList<Color[]> getGroupColors()
+	public Color[] getGroupColors()
 	{
 		return groupColors;
 	}

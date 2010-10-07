@@ -111,7 +111,7 @@ public class MatchTree extends JTree implements RegexEventListener
 
 		ArrayList<int[]> matches = new ArrayList<int[]>();
 		ArrayList<int[][]> groups = new ArrayList<int[][]>();
-		ArrayList<Color[]> groupColors = new ArrayList<Color[]>();
+		Color[] groupColors = null;
 
 		ArrayList<MatchNode> matchNodes = new ArrayList<MatchNode>();
 
@@ -126,7 +126,7 @@ public class MatchTree extends JTree implements RegexEventListener
 		{
 			matches = new ArrayList<int[]>();
 			groups = new ArrayList<int[][]>();
-			groupColors = new ArrayList<Color[]>();
+			groupColors = null;
 		}
 
 		/**
@@ -163,7 +163,7 @@ public class MatchTree extends JTree implements RegexEventListener
 					{
 						//do nothing
 					}
-					mn.groups.add(new GroupNode(g[j][0], g[j][1], j, groupColors.get(i)[j], text));
+					mn.groups.add(new GroupNode(g[j][0], g[j][1], j, groupColors[j], text));
 				}
 				matchNodes.add(mn);
 			}
@@ -337,9 +337,6 @@ public class MatchTree extends JTree implements RegexEventListener
 	 */
 	static class MatchTreeNodeRenderer extends DefaultTreeCellRenderer
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -3491427615572210396L;
 		static ColorIcon groupIcon = new ColorIcon();
 

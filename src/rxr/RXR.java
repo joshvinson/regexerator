@@ -8,13 +8,6 @@ import javax.swing.*;
 import rxr.action.*;
 import rxr.util.*;
 
-/*
- * TODO: Custom progress bar UI DONE
- * TODO: interrupt match thread on edit DONE
- * TODO: highlight in replace pane
- * TODO: reset results while matching?
- */
-
 public class RXR
 {
 	public static final Properties props = new Properties();
@@ -37,7 +30,7 @@ public class RXR
 		{
 			Util.Window.error(e, "Cannot load properties file", true);
 		}
-		
+
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
