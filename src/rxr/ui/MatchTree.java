@@ -1,4 +1,4 @@
-package rxr;
+package rxr.ui;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -8,8 +8,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
-import rxr.MatchTree.MatchTreeModel.GroupNode;
-import rxr.MatchTree.MatchTreeModel.MatchNode;
+import rxr.ui.MatchTree.MatchTreeModel.*;
 
 public class MatchTree extends JTree implements RegexEventListener
 {
@@ -41,12 +40,14 @@ public class MatchTree extends JTree implements RegexEventListener
 				if(end instanceof MatchNode)
 				{
 					MatchNode node = (MatchNode)end;
-					getListener().setOutlineRange(node.start, node.end);
+					//getListener().setOutlineRange(node.start, node.end);
+					getListener().setOutlineGroup(node.index);
 				}
 				else if(end instanceof GroupNode)
 				{
 					GroupNode node = (GroupNode)end;
-					getListener().setOutlineRange(node.start, node.end);
+					//getListener().setOutlineRange(node.start, node.end);
+					getListener().setOutlineGroup(node.parent.index, node.index);
 				}
 			}
 		});
@@ -61,6 +62,11 @@ public class MatchTree extends JTree implements RegexEventListener
 	public void regexEvent(Type t)
 	{
 		if(t == Type.BAD_PATTERN)
+		{
+			model.clear();
+			model.recalc();
+		}
+		if(t == Type.BAD_REPLACE)
 		{
 			model.clear();
 			model.recalc();
@@ -163,7 +169,7 @@ public class MatchTree extends JTree implements RegexEventListener
 					{
 						//do nothing
 					}
-					mn.groups.add(new GroupNode(g[j][0], g[j][1], j, groupColors[j], text));
+					mn.groups.add(new GroupNode(mn, g[j][0], g[j][1], j, groupColors[j], text));
 				}
 				matchNodes.add(mn);
 			}
@@ -308,7 +314,7 @@ public class MatchTree extends JTree implements RegexEventListener
 		 */
 		class GroupNode
 		{
-			public GroupNode(int start, int end, int index, Color color, String text)
+			public GroupNode(MatchNode parent, int start, int end, int index, Color color, String text)
 			{
 				super();
 				this.start = start;
@@ -316,6 +322,7 @@ public class MatchTree extends JTree implements RegexEventListener
 				this.index = index;
 				this.color = color;
 				this.text = text;
+				this.parent = parent;
 			}
 
 			int start;
@@ -323,6 +330,7 @@ public class MatchTree extends JTree implements RegexEventListener
 			int index;
 			Color color;
 			String text;
+			MatchNode parent;
 
 			@Override
 			public String toString()

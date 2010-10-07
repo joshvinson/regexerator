@@ -1,4 +1,4 @@
-package rxr;
+package rxr.ui;
 
 /**
  * A regex event occurs whenever a new matching operation begins, or when one

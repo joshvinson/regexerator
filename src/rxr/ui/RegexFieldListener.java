@@ -1,4 +1,4 @@
-package rxr;
+package rxr.ui;
 
 import java.awt.*;
 import java.util.*;
@@ -9,8 +9,9 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.text.Highlighter.HighlightPainter;
 
-import rxr.RegexEventListener.Type;
+import rxr.ui.RegexEventListener.*;
 import rxr.util.*;
+import rxr.util.component.*;
 
 /**
  * RegexFieldListener listens for changes in a Document, and reapplies a regular
@@ -41,6 +42,7 @@ class RegexFieldListener implements DocumentListener
 	boolean doReplace = false;
 
 	protected Object selectHighlightHandle;
+	protected HashSet<Object> replaceHighlightHandles;
 
 	protected int progress;
 
@@ -62,6 +64,7 @@ class RegexFieldListener implements DocumentListener
 		this.replaceSource = replaceSource;
 		this.replaceTarget = replaceTarget;
 		listeners = new HashSet<RegexEventListener>();
+		replaceHighlightHandles = new HashSet<Object>();
 	}
 
 	/**
@@ -129,7 +132,7 @@ class RegexFieldListener implements DocumentListener
 				catch(BadLocationException e)
 				{
 					//should never get here
-					Util.Window.error(e, "Error getting test text from component", false);
+					WindowUtil.error(e, "Error getting test text from component", false);
 					reset();
 					update();
 					return;
@@ -159,6 +162,90 @@ class RegexFieldListener implements DocumentListener
 			}
 		};
 		thread.start();
+	}
+
+	public void setOutlineGroup(int match)
+	{
+		setOutlineGroup(match, -1);
+	}
+
+	public void setOutlineGroup(int match, int group)
+	{
+		//do target
+		int start;
+		int end;
+
+		if(matches == null)
+		{
+			return;
+		}
+
+		if(group == -1)
+		{
+			start = matches.get(match)[0];
+			end = matches.get(match)[1];
+		}
+		else
+		{
+			start = groups.get(match)[group][0];
+			end = groups.get(match)[group][1];
+		}
+
+		Highlighter h = target.getHighlighter();
+		if(selectHighlightHandle == null)
+		{
+			//HighlightPainter ohp = new OutlineHighlighter(Color.BLACK).getPainter();
+			HighlightPainter hp = new DefaultHighlighter.DefaultHighlightPainter(selectColor);
+			try
+			{
+				selectHighlightHandle = h.addHighlight(start, end, hp);
+			}
+			catch(Exception e)
+			{
+				//
+			}
+		}
+		else
+		{
+			try
+			{
+				h.changeHighlight(selectHighlightHandle, start, end);
+			}
+			catch(Exception e)
+			{
+				//
+			}
+		}
+
+		//do replace
+		if(doReplace)
+		{
+			group++;
+			h = replaceTarget.getHighlighter();
+			//remove replace highlights
+			for(Object o : replaceHighlightHandles)
+			{
+				h.removeHighlight(o);
+			}
+			replaceHighlightHandles.clear();
+			HighlightPainter hp = new DefaultHighlighter.DefaultHighlightPainter(selectColor);
+			for(int i = 0; i < replaceGroups.get(match).size(); i++)
+			{
+				if(replaceGroups.get(match).get(i)[0] == group)
+				{
+					start = replaceGroups.get(match).get(i)[1];
+					end = replaceGroups.get(match).get(i)[2];
+					try
+					{
+						replaceHighlightHandles.add(h.addHighlight(start, end, hp));
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -388,9 +475,9 @@ class RegexFieldListener implements DocumentListener
 	 *            the offset to add to indices. Usually this will be the
 	 *            starting index of the match in a larger string.
 	 * @return all the indices of the replacements made. Each entry in the top
-	 *         array is a three entry array. The first entry is the group number
-	 *         (which will never be 0). The second and third are the start and
-	 *         end indices of the replaced group in the result.
+	 *         array is a three entry array. The first entry is the group
+	 *         number. The second and third are the start and end indices of the
+	 *         replaced group in the result.
 	 */
 	public ArrayList<int[]> getReplaceGroups(Matcher m, String replacement, int offset)
 	{
@@ -463,6 +550,7 @@ class RegexFieldListener implements DocumentListener
 				cursor++;
 			}
 		}
+		index.add(new int[] {0, offset, offset + result.length()});
 		return index;
 	}
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Regexerator" default="clean" basedir=".">
+<project name="regexerator" default="clean" basedir=".">
 	<property file="src/res/props/rxr.properties" />
-	
+
 	<description>
         Build file for Regexerator
     </description>

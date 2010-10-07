@@ -12,3 +12,5 @@ syntax: regexp
 ^ant-cov\.xml$
 syntax: regexp
 ^ss$
+syntax: regexp
+^TODO$

@@ -1,4 +1,4 @@
-package rxr;
+package rxr.ui;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.plaf.basic.*;
 
+import rxr.*;
 import rxr.util.*;
 import rxr.util.component.*;
 
@@ -276,9 +277,9 @@ public class MainPanel extends JPanel
 		//splitPane = text and tree
 		final JSplitPane splitPane = new JSplitPane();
 
-		splitPane.setBorder(Util.Layout.getEmptyBorder());
+		splitPane.setBorder(LayoutUtil.getEmptyBorder());
 		BasicSplitPaneUI ui = (BasicSplitPaneUI)splitPane.getUI();
-		ui.getDivider().setBorder(Util.Layout.getEmptyBorder());
+		ui.getDivider().setBorder(LayoutUtil.getEmptyBorder());
 		ui.getDivider().setDividerSize(3);
 		splitPane.setContinuousLayout(true);
 		splitPane.resetToPreferredSizes();
@@ -287,9 +288,9 @@ public class MainPanel extends JPanel
 		//splitPane2 = test and replace
 		splitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
-		splitPane2.setBorder(Util.Layout.getEmptyBorder());
+		splitPane2.setBorder(LayoutUtil.getEmptyBorder());
 		ui = (BasicSplitPaneUI)splitPane2.getUI();
-		ui.getDivider().setBorder(Util.Layout.getEmptyBorder());
+		ui.getDivider().setBorder(LayoutUtil.getEmptyBorder());
 		ui.getDivider().setDividerSize(3);
 		splitPane2.setContinuousLayout(true);
 		splitPane2.resetToPreferredSizes();
@@ -313,10 +314,10 @@ public class MainPanel extends JPanel
 		splitPane.setRightComponent(boxc);
 
 		//borders
-		regexField.setBorder(Util.Layout.getEmptyBorder(4));
-		textField.setBorder(Util.Layout.getEmptyBorder(4));
-		regexStatusLabel.setBorder(Util.Layout.getEmptyBorder(4));
-		matchTree.setBorder(Util.Layout.getEmptyBorder(4));
+		regexField.setBorder(LayoutUtil.getEmptyBorder(4));
+		textField.setBorder(LayoutUtil.getEmptyBorder(4));
+		regexStatusLabel.setBorder(LayoutUtil.getEmptyBorder(4));
+		matchTree.setBorder(LayoutUtil.getEmptyBorder(4));
 		autoRefreshCheck.setBorder(new EmptyBorder(2, 2, 2, 2));
 		runButton.setBorder(new EmptyBorder(3, 3, 3, 5));
 		expandButton.setBorder(new EmptyBorder(3, 5, 3, 5));
@@ -324,13 +325,13 @@ public class MainPanel extends JPanel
 
 		progress.setBorder(new DropShadowBorder());
 
-		replaceRegexField.setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 0, Color.GRAY), Util.Layout.getEmptyBorder(4)));
+		replaceRegexField.setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 0, Color.GRAY), LayoutUtil.getEmptyBorder(4)));
 		replaceRegexLabel.setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 1, Color.GRAY), new EmptyBorder(5, 3, 5, 3)));
 
 		replaceStatusLabel.setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 0, Color.GRAY), new EmptyBorder(4, 4, 4, 4)));
 
-		//jspa.setBorder(Util.Layout.getEmptyBorder(0));
-		//jspb.setBorder(Util.Layout.getEmptyBorder(0));
+		//jspa.setBorder(LayoutUtil.getEmptyBorder(0));
+		//jspb.setBorder(LayoutUtil.getEmptyBorder(0));
 
 		TitleBarDropShadowBorder bordera = new TitleBarDropShadowBorder("Regular Expression", null);
 		TitleBarDropShadowBorder borderb = new TitleBarDropShadowBorder("Test Text", null);
@@ -349,7 +350,7 @@ public class MainPanel extends JPanel
 		jspb.setBorder(borderc);
 		jspaa.setBorder(borderd);
 
-		setBorder(Util.Layout.getEmptyBorder(1));
+		setBorder(LayoutUtil.getEmptyBorder(1));
 
 		//add
 		add(boxa, BorderLayout.NORTH);

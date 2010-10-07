@@ -6,6 +6,7 @@ import java.util.*;
 import javax.swing.*;
 
 import rxr.action.*;
+import rxr.ui.*;
 import rxr.util.*;
 
 public class RXR
@@ -28,7 +29,7 @@ public class RXR
 		}
 		catch(Exception e)
 		{
-			Util.Window.error(e, "Cannot load properties file", true);
+			WindowUtil.error(e, "Cannot load properties file", true);
 		}
 
 		try
@@ -50,7 +51,7 @@ public class RXR
 		window.add(main);
 
 		window.setSize(600, 400);
-		Util.Window.center(window);
+		WindowUtil.center(window);
 		window.setVisible(true);
 	}
 

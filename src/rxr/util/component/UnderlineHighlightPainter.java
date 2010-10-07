@@ -1,4 +1,4 @@
-package rxr.util;
+package rxr.util.component;
 
 import java.awt.*;
 
