@@ -24,8 +24,10 @@ public class RXR
 	public static void main(String[] args)
 	{
 		ArrayList<String> propUrls = new ArrayList<String>();
+
 		propUrls.add("res/props/rxr.properties");
 		propUrls.add("res/props/rxr.settings.properties");
+
 		for(String s : propUrls)
 		{
 			try
@@ -104,7 +106,7 @@ public class RXR
 	{
 		return RXR.class.getClassLoader().getResource(path);
 	}
-	
+
 	public static String get(String prop)
 	{
 		return props.getProperty(prop);

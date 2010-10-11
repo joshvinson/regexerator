@@ -41,6 +41,16 @@ public class ColorUtil
 		return new Color(r, g, b, alpha);
 	}
 
+	/**
+	 * Decodes a color of the form #hhhhhhhh or #hhhhhh, (for example,
+	 * #39F80D8C, or #9A67E9), where each two digit hexadecimal part is the red,
+	 * green, blue, and alpha, respectively. The alpha component is optional,
+	 * and will be assumed to be FF if not present.
+	 * 
+	 * @param s
+	 *            the string to decode
+	 * @return a color described by the string parameter
+	 */
 	public static Color decode(String s)
 	{
 		if(s.startsWith("#"))
