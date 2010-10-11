@@ -31,7 +31,7 @@
 
 		<!-- Create executable jar -->
 		<!-- Put everything in ${build} into the ${ant.project.name}-${DSTAMP}.jar file -->
-		<jar jarfile="${dist}/${rxr.programName}-${rxr.release.version}.jar">
+		<jar jarfile="${dist}/${rxr.programName}-${rxr.version}.jar">
 			<fileset dir="${bin}" />
 			<fileset file="LICENSE" />
 
@@ -42,7 +42,7 @@
 		</jar>
 
 		<!-- Create source zip file -->
-		<zip destfile="${dist}/${rxr.programName}-${rxr.release.version}-src.zip" basedir="${src}">
+		<zip destfile="${dist}/${rxr.programName}-${rxr.version}-src.zip" basedir="${src}">
 			<fileset file="LICENSE" />
 		</zip>
 	</target>

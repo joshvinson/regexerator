@@ -33,7 +33,7 @@
 	</target>
 
 	<target name="commit" depends="loadtask">
-		<covcommitdefects dir="${int-dir}" stream="${rxr.programName}" remote="localhost" user="admin" password="123456">
+		<covcommitdefects dir="${int-dir}" stream="regexerator" remote="localhost" user="admin" password="123456">
 		</covcommitdefects>
 	</target>
 

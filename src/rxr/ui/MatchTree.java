@@ -6,9 +6,11 @@ import java.util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.text.*;
 import javax.swing.tree.*;
 
-import rxr.ui.MatchTree.MatchTreeModel.*;
+import rxr.ui.MatchTree.MatchTreeModel.GroupNode;
+import rxr.ui.MatchTree.MatchTreeModel.MatchNode;
 
 public class MatchTree extends JTree implements RegexEventListener
 {
@@ -30,24 +32,89 @@ public class MatchTree extends JTree implements RegexEventListener
 		setRootVisible(false);
 		setCellRenderer(new MatchTreeNodeRenderer());
 		setShowsRootHandles(true);
+		getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
 		addTreeSelectionListener(new TreeSelectionListener()
 		{
 			@Override
 			public void valueChanged(TreeSelectionEvent e)
 			{
+				int textLoc = 0;
+				int replaceLoc = 0;
 				Object end = e.getPath().getLastPathComponent();
 				if(end instanceof MatchNode)
 				{
 					MatchNode node = (MatchNode)end;
 					//getListener().setOutlineRange(node.start, node.end);
 					getListener().setOutlineGroup(node.index);
+					textLoc = node.start;
+					if(getListener().isDoReplace())
+					{
+						ArrayList<int[]> temp = getListener().replaceGroups.get(node.index);
+						for(int[] i : temp)
+						{
+							if(i[0] == 0)
+							{
+								replaceLoc = i[1];
+								break;
+							}
+						}
+					}
 				}
 				else if(end instanceof GroupNode)
 				{
 					GroupNode node = (GroupNode)end;
-					//getListener().setOutlineRange(node.start, node.end);
 					getListener().setOutlineGroup(node.parent.index, node.index);
+					textLoc = node.start;
+					if(getListener().isDoReplace())
+					{
+						ArrayList<int[]> temp = getListener().replaceGroups.get(node.parent.index);
+						for(int[] i : temp)
+						{
+							if(i[0] == node.index)
+							{
+								replaceLoc = i[1];
+								break;
+							}
+						}
+					}
+
+				}
+				else
+				{
+					return;
+				}
+
+				try
+				{
+					JTextComponent jtc = getListener().getTarget();
+					Rectangle pos = jtc.modelToView(textLoc);
+					if(pos != null)
+					{
+						jtc.scrollRectToVisible(pos);
+					}
+				}
+				catch(BadLocationException e2)
+				{
+					e2.printStackTrace();
+				}
+
+				if(getListener().isDoReplace())
+				{
+					try
+					{
+						JTextComponent jtc = getListener().getReplaceTarget();
+						Rectangle pos = jtc.modelToView(replaceLoc);
+						System.out.println(pos);
+						if(pos != null)
+						{
+							getListener().getReplaceTarget().scrollRectToVisible(pos);
+						}
+					}
+					catch(BadLocationException e2)
+					{
+						e2.printStackTrace();
+					}
 				}
 			}
 		});

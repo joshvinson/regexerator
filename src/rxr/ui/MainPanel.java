@@ -16,7 +16,16 @@ public class MainPanel extends JPanel
 	private static final long serialVersionUID = -4238061796428182229L;
 
 	//components
+
+	/**
+	 * The regular expression input field.
+	 */
 	JTextField regexField;
+
+	/**
+	 * The test text input field. The contents of this is what the regex is
+	 * matched against.
+	 */
 	JTextPane textField;
 	JCheckBox autoRefreshCheck;
 	JCheckBox autoExpandCheck;
@@ -25,14 +34,13 @@ public class MainPanel extends JPanel
 	MatchTree matchTree;
 	JButton expandButton;
 	JButton collapseButton;
-	JLabel statusLabel;
 	JCheckBox replaceCheck;
 	JTextPane replaceField;
 	JSplitPane splitPane2;
 	JTextField replaceRegexField;
 	JLabel replaceRegexLabel;
 	JLabel replaceStatusLabel;
-	JProgressBar progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
+	JProgressBar progress;
 
 	RegexFieldListener listener;
 
@@ -54,12 +62,12 @@ public class MainPanel extends JPanel
 		autoExpandCheck = new JCheckBox("Auto Expand Tree", true);
 		expandButton = new JButton("Expand");
 		collapseButton = new JButton("Collapse");
-		statusLabel = new JLabel();
 		replaceCheck = new JCheckBox("Replace", false);
 		replaceField = new JTextPane();
 		replaceRegexField = new JTextField();
 		replaceRegexLabel = new JLabel("Replace with");
 		replaceStatusLabel = new JLabel("Ready");
+		progress = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
 
 		//--components configure--
 		listener = new RegexFieldListener(regexField, textField, replaceRegexField, replaceField);
@@ -84,67 +92,7 @@ public class MainPanel extends JPanel
 
 		matchTree = new MatchTree(listener);
 
-		listener.addListener(new RegexEventListener()
-		{
-			@Override
-			public void regexEvent(final Type t)
-			{
-				/*if(t == Type.RECALC_PROGRESS)
-				{
-					
-				}*/
-				SwingUtilities.invokeLater(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						switch(t)
-						{
-						case RECALC_PROGRESS:
-							progress.setValue(listener.progress);
-							progress.setString(listener.matches.size() + " matches");
-							progress.repaint();
-							break;
-						case RECALC_START:
-							regexStatusLabel.setIcon(startIcon);
-							regexStatusLabel.setText("Working");
-							replaceStatusLabel.setIcon(startIcon);
-							replaceStatusLabel.setText("Working");
-							statusLabel.setText("");
-							break;
-						case RECALC_COMPLETE:
-							regexStatusLabel.setIcon(doneIcon);
-							regexStatusLabel.setText("Ready");
-							replaceStatusLabel.setIcon(doneIcon);
-							replaceStatusLabel.setText("Ready");
-							if(listener.matches != null)
-							{
-								statusLabel.setText(listener.matches.size() + " matches found.");
-							}
-							break;
-						case BAD_PATTERN:
-							regexStatusLabel.setIcon(errorIcon);
-							regexStatusLabel.setText("Error");
-							replaceStatusLabel.setIcon(waitingIcon);
-							replaceStatusLabel.setText("Waiting");
-							statusLabel.setText("");
-							break;
-						case BAD_REPLACE:
-							regexStatusLabel.setIcon(doneIcon);
-							regexStatusLabel.setText("Ready");
-							replaceStatusLabel.setIcon(errorIcon);
-							replaceStatusLabel.setText("Error");
-							statusLabel.setText("");
-							break;
-						}
-					}
-				});
-
-			}
-		});
-
 		regexStatusLabel.setIcon(doneIcon);
-		//regexStatusLabel.setFont(new Font("Courier", Font.PLAIN, 12));
 		regexStatusLabel.setOpaque(true);
 		regexStatusLabel.setBackground(Color.WHITE);
 		regexStatusLabel.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -212,8 +160,6 @@ public class MainPanel extends JPanel
 			}
 		});
 
-		statusLabel.setFont(new Font("", Font.BOLD, 12));
-
 		replaceCheck.setFocusable(false);
 		replaceField.setEditable(false);
 
@@ -256,12 +202,9 @@ public class MainPanel extends JPanel
 		boxab.add(runButton);
 		boxab.add(autoRefreshCheck);
 		boxab.add(replaceCheck);
-		//boxab.add(Box.createHorizontalGlue());
-		//boxab.add(statusLabel);
 		boxab.add(Box.createHorizontalStrut(5));
 		boxab.add(progress);
 		boxab.add(Box.createHorizontalStrut(5));
-		//boxab.add(Box.createHorizontalGlue());
 		boxab.add(autoExpandCheck);
 		boxab.add(expandButton);
 		boxab.add(collapseButton);
@@ -270,9 +213,9 @@ public class MainPanel extends JPanel
 		boxa.add(boxab);
 
 		//scrollpanes
-		final JScrollPane jspa = new JScrollPane(textField);
-		final JScrollPane jspaa = new JScrollPane(replaceField);
-		JScrollPane jspb = new JScrollPane(matchTree);
+		final JScrollPane jspTextField = new JScrollPane(textField);
+		final JScrollPane jspReplaceField = new JScrollPane(replaceField);
+		JScrollPane jspMatchTree = new JScrollPane(matchTree);
 
 		//splitPane = text and tree
 		final JSplitPane splitPane = new JSplitPane();
@@ -300,16 +243,16 @@ public class MainPanel extends JPanel
 		//Box boxb = Box.createVerticalBox();
 		//boxb.add(jspa);
 		//boxb.add(jspaa);
-		splitPane2.setTopComponent(jspa);
-		splitPane2.setBottomComponent(jspaa);
+		splitPane2.setTopComponent(jspTextField);
+		splitPane2.setBottomComponent(jspReplaceField);
 
 		//splitPane.setLeftComponent(boxb);
 		//splitPane.setLeftComponent(splitPane2);
-		splitPane.setLeftComponent(jspa);
+		splitPane.setLeftComponent(jspTextField);
 
 		//boxc = tree
 		Box boxc = Box.createVerticalBox();
-		boxc.add(jspb);
+		boxc.add(jspMatchTree);
 
 		splitPane.setRightComponent(boxc);
 
@@ -346,9 +289,9 @@ public class MainPanel extends JPanel
 		boxa.setBorder(new EmptyBorder(0, 0, 0, 0));
 		boxaa1.setBorder(new CompoundBorder(new EmptyBorder(0, 0, 0, 0), bordera));
 		boxab.setBorder(new EmptyBorder(0, 3, 0, 3));
-		jspa.setBorder(borderb);
-		jspb.setBorder(borderc);
-		jspaa.setBorder(borderd);
+		jspTextField.setBorder(borderb);
+		jspMatchTree.setBorder(borderc);
+		jspReplaceField.setBorder(borderd);
 
 		setBorder(LayoutUtil.getEmptyBorder(1));
 
@@ -356,15 +299,16 @@ public class MainPanel extends JPanel
 		add(boxa, BorderLayout.NORTH);
 		add(splitPane, BorderLayout.CENTER);
 
+		//add complex listeners
 		replaceCheck.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				if(replaceCheck.isSelected() && splitPane.getLeftComponent() == jspa)
+				if(replaceCheck.isSelected() && splitPane.getLeftComponent() == jspTextField)
 				{
-					splitPane.remove(jspa);
-					splitPane2.setTopComponent(jspa);
+					splitPane.remove(jspTextField);
+					splitPane2.setTopComponent(jspTextField);
 					splitPane.setLeftComponent(splitPane2);
 
 					boxaa1.add(boxaa2);
@@ -376,8 +320,8 @@ public class MainPanel extends JPanel
 				else
 				{
 					splitPane.remove(splitPane2);
-					splitPane2.remove(jspa);
-					splitPane.setLeftComponent(jspa);
+					splitPane2.remove(jspTextField);
+					splitPane.setLeftComponent(jspTextField);
 
 					boolean focus = false;
 					if(replaceRegexField.hasFocus())
@@ -402,6 +346,55 @@ public class MainPanel extends JPanel
 			}
 		});
 
+		listener.addListener(new RegexEventListener()
+		{
+			@Override
+			public void regexEvent(final Type t)
+			{
+				SwingUtilities.invokeLater(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						switch(t)
+						{
+						case RECALC_PROGRESS:
+							progress.setValue(listener.progress);
+							progress.setString(listener.matches.size() + " matches");
+							progress.repaint();
+							break;
+						case RECALC_START:
+							regexStatusLabel.setIcon(startIcon);
+							regexStatusLabel.setText("Working");
+							replaceStatusLabel.setIcon(startIcon);
+							replaceStatusLabel.setText("Working");
+							break;
+						case RECALC_COMPLETE:
+							regexStatusLabel.setIcon(doneIcon);
+							regexStatusLabel.setText("Ready");
+							replaceStatusLabel.setIcon(doneIcon);
+							replaceStatusLabel.setText("Ready");
+							break;
+						case BAD_PATTERN:
+							regexStatusLabel.setIcon(errorIcon);
+							regexStatusLabel.setText("Error");
+							replaceStatusLabel.setIcon(waitingIcon);
+							replaceStatusLabel.setText("Waiting");
+							break;
+						case BAD_REPLACE:
+							regexStatusLabel.setIcon(doneIcon);
+							regexStatusLabel.setText("Ready");
+							replaceStatusLabel.setIcon(errorIcon);
+							replaceStatusLabel.setText("Error");
+							break;
+						}
+					}
+				});
+
+			}
+		});
+
+		//initialize ui by running the empty default regex
 		listener.regex();
 	}
 }
