@@ -1,4 +1,4 @@
-%rxr.programName% %rxr.release.version%
+%rxr.programName% %rxr.version%
 
 For more information, updates and support:
 %rxr.homepage%

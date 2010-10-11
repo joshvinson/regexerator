@@ -33,7 +33,7 @@ public class HelpAction extends AbstractAction
 				Matcher m = p.matcher(line);
 				while(m.find())
 				{
-					String rep = RXR.props.getProperty(m.group(1));
+					String rep = RXR.get(m.group(1));
 					m.appendReplacement(text, rep == null ? "[invalid property]" : rep);
 				}
 				m.appendTail(text);

@@ -9,6 +9,7 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.text.Highlighter.HighlightPainter;
 
+import rxr.*;
 import rxr.ui.RegexEventListener.*;
 import rxr.util.*;
 import rxr.util.component.*;
@@ -25,8 +26,8 @@ class RegexFieldListener implements DocumentListener
 	protected JTextPane replaceTarget;
 	protected HashSet<RegexEventListener> listeners;
 
-	protected Color highlightColor = new Color(255, 230, 0, 96);
-	protected Color selectColor = new Color(128, 0, 255, 128);
+	protected Color highlightColor = ColorUtil.decode(RXR.get("rxr.ui.matchHighlightColor"));
+	protected Color selectColor = ColorUtil.decode(RXR.get("rxr.ui.selectHighlightColor"));
 
 	protected ArrayList<int[]> matches;
 	protected ArrayList<int[][]> groups;
@@ -175,7 +176,7 @@ class RegexFieldListener implements DocumentListener
 		int start;
 		int end;
 
-		if(matches == null)
+		if(matches == null || matches.size() == 0)
 		{
 			return;
 		}
@@ -595,11 +596,13 @@ class RegexFieldListener implements DocumentListener
 	 */
 	private void doHighlight()
 	{
+		//highlight target
 		Highlighter h = target.getHighlighter();
 		HighlightPainter hp = new DefaultHighlighter.DefaultHighlightPainter(highlightColor);
 
 		for(int i = 0; i < matches.size(); i++)
 		{
+
 			int[][] gs = groups.get(i);
 
 			for(int j = 0; j < gs.length; j++)
@@ -607,7 +610,6 @@ class RegexFieldListener implements DocumentListener
 				try
 				{
 					HighlightPainter ghp = new UnderlineHighlightPainter(groupColors[j]);
-					//HighlightPainter ghp = new UnderlineHighlighter(cs[j]).getPainter();
 					h.addHighlight(gs[j][0], gs[j][1], ghp);
 				}
 				catch(Exception e)
@@ -616,7 +618,6 @@ class RegexFieldListener implements DocumentListener
 					return;
 				}
 			}
-
 			try
 			{
 				h.addHighlight(matches.get(i)[0], matches.get(i)[1], hp);
@@ -628,38 +629,43 @@ class RegexFieldListener implements DocumentListener
 			}
 		}
 
-		h = replaceTarget.getHighlighter();
+		//highlight replaceTarget
 
-		for(int i = 0; i < replaces.size(); i++)
+		if(doReplace)
 		{
-			try
-			{
-				h.addHighlight(replaces.get(i)[0], replaces.get(i)[1], hp);
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
+			h = replaceTarget.getHighlighter();
 
-		for(int i = 0; i < replaceGroups.size(); i++)
-		{
-			ArrayList<int[]> gs = replaceGroups.get(i);
+			for(int i = 0; i < replaceGroups.size(); i++)
+			{
+				ArrayList<int[]> gs = replaceGroups.get(i);
 
-			for(int j = 0; j < gs.size(); j++)
+				for(int j = 0; j < gs.size(); j++)
+				{
+					try
+					{
+						if(gs.get(j)[0] > 0) //ignore whole group reference
+						{
+							HighlightPainter ghp = new UnderlineHighlightPainter(groupColors[gs.get(j)[0] - 1]);
+							h.addHighlight(gs.get(j)[1], gs.get(j)[2], ghp);
+						}
+					}
+					catch(BadLocationException e)
+					{
+						WindowUtil.error(e, "Error highlighting replace result", false);
+						return;
+					}
+				}
+			}
+
+			for(int i = 0; i < replaces.size(); i++)
 			{
 				try
 				{
-					if(gs.get(j)[0] > 0) //ignore whole group reference
-					{
-						HighlightPainter ghp = new UnderlineHighlightPainter(groupColors[gs.get(j)[0] - 1]);
-						h.addHighlight(gs.get(j)[1], gs.get(j)[2], ghp);
-					}
+					h.addHighlight(replaces.get(i)[0], replaces.get(i)[1], hp);
 				}
 				catch(Exception e)
 				{
 					e.printStackTrace();
-					return;
 				}
 			}
 		}

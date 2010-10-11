@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="regexerator" default="clean" basedir=".">
+<project name="Regexerator Build" default="clean" basedir=".">
 	<property file="src/res/props/rxr.properties" />
 
 	<description>
-        Build file for Regexerator
+		Regexerator Build File
     </description>
 
 	<!-- set global properties for this build -->

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Regexerator Coverity Tasks" default="clean" basedir=".">
+	<property file="src/res/props/rxr.properties" />
+	
+	<description>
+		Regexerator Coverity Tasks
+    </description>
+
+	<!-- set global properties for this build -->
+	<property name="src" location="src" />
+	<property name="bin" location="cov-bin" />
+	<property name="int-dir" location="cov-int-dir" />
+	<property name="cov-root" location="C:/Program Files/Coverity/Coverity Static Analysis" />
+
+	<target name="clean" description="clean output folders">
+		<delete dir="${bin}" />
+		<delete dir="${int-dir}" />
+	</target>
+
+	<target name="compile" description="compile the source ">
+		<mkdir dir="${bin}" />
+		<javac srcdir="${src}" destdir="${bin}" debug="on" />
+	</target>
+
+	<property name="anttask.jar" value="${cov-root}/library/coverity-anttask.jar" />
+
+	<target name="loadtask">
+		<taskdef resource="com/coverity/anttask.xml" classpath="${anttask.jar}" />
+	</target>
+
+	<target name="analyze" depends="loadtask,compile">
+		<covanalyzejava dir="${int-dir}" classfiles="${bin}" findsource="${src}" additionaloptions="--all" />
+	</target>
+
+	<target name="commit" depends="loadtask">
+		<covcommitdefects dir="${int-dir}" stream="${rxr.programName}" remote="localhost" user="admin" password="123456">
+		</covcommitdefects>
+	</target>
+
+	<target name="coverity" depends="loadtask,analyze,commit">
+	</target>
+</project>

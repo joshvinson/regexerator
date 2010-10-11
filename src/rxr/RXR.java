@@ -23,13 +23,19 @@ public class RXR
 	 */
 	public static void main(String[] args)
 	{
-		try
+		ArrayList<String> propUrls = new ArrayList<String>();
+		propUrls.add("res/props/rxr.properties");
+		propUrls.add("res/props/rxr.settings.properties");
+		for(String s : propUrls)
 		{
-			props.load(load("res/props/rxr.properties").openStream());
-		}
-		catch(Exception e)
-		{
-			WindowUtil.error(e, "Cannot load properties file", true);
+			try
+			{
+				props.load(load(s).openStream());
+			}
+			catch(Exception e)
+			{
+				WindowUtil.error(e, "Cannot load properties file: " + s, true);
+			}
 		}
 
 		try
@@ -80,7 +86,6 @@ public class RXR
 
 		//add top
 		menu.add(file);
-		//menu.add(Util.PLAF.makeLAFMenu(window));
 		menu.add(help);
 
 		return menu;
@@ -98,5 +103,10 @@ public class RXR
 	public static URL load(String path)
 	{
 		return RXR.class.getClassLoader().getResource(path);
+	}
+	
+	public static String get(String prop)
+	{
+		return props.getProperty(prop);
 	}
 }
