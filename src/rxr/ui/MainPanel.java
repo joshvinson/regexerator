@@ -52,6 +52,12 @@ public class MainPanel extends JPanel
 		final ImageIcon errorIcon = new ImageIcon(RXR.load("res/media/10448.error_obj.gif"));
 		final ImageIcon runIcon = new ImageIcon(RXR.load("res/media/17155.run_exc.png"));
 		final ImageIcon waitingIcon = new ImageIcon(RXR.load("res/media/13437.elipses.gif"));
+		final ImageIcon tooManyIcon = new ImageIcon(RXR.load("res/media/17597.showdesc_co.gif"));
+		
+		final ImageIcon regexIcon = new ImageIcon(RXR.load("res/media/10562.metharg_obj.gif"));
+		final ImageIcon textIcon = new ImageIcon(RXR.load("res/media/10388.file_obj.gif"));
+		final ImageIcon replaceIcon = new ImageIcon(RXR.load("res/media/10450.externalize.gif"));
+		final ImageIcon treeIcon = new ImageIcon(RXR.load("res/media/14082.tree_explorer.gif"));
 
 		//--components init--
 		regexField = new JTextField();
@@ -202,6 +208,7 @@ public class MainPanel extends JPanel
 		boxab.add(runButton);
 		boxab.add(autoRefreshCheck);
 		boxab.add(replaceCheck);
+		//boxab.add(wordWrapCheck);
 		boxab.add(Box.createHorizontalStrut(5));
 		boxab.add(progress);
 		boxab.add(Box.createHorizontalStrut(5));
@@ -215,6 +222,7 @@ public class MainPanel extends JPanel
 		//scrollpanes
 		final JScrollPane jspTextField = new JScrollPane(textField);
 		final JScrollPane jspReplaceField = new JScrollPane(replaceField);
+
 		JScrollPane jspMatchTree = new JScrollPane(matchTree);
 
 		//splitPane = text and tree
@@ -276,10 +284,10 @@ public class MainPanel extends JPanel
 		//jspa.setBorder(LayoutUtil.getEmptyBorder(0));
 		//jspb.setBorder(LayoutUtil.getEmptyBorder(0));
 
-		TitleBarDropShadowBorder bordera = new TitleBarDropShadowBorder("Regular Expression", null);
-		TitleBarDropShadowBorder borderb = new TitleBarDropShadowBorder("Test Text", null);
-		TitleBarDropShadowBorder borderc = new TitleBarDropShadowBorder("Match Tree", null);
-		TitleBarDropShadowBorder borderd = new TitleBarDropShadowBorder("Replace Result", null);
+		TitleBarDropShadowBorder bordera = new TitleBarDropShadowBorder("Regular Expression", regexIcon);
+		TitleBarDropShadowBorder borderb = new TitleBarDropShadowBorder("Test Text", textIcon);
+		TitleBarDropShadowBorder borderc = new TitleBarDropShadowBorder("Match Tree", treeIcon);
+		TitleBarDropShadowBorder borderd = new TitleBarDropShadowBorder("Replace Result", replaceIcon);
 
 		bordera.getTitleBarBorder().setLeftColor(new Color(170, 220, 170));
 		borderb.getTitleBarBorder().setLeftColor(new Color(170, 170, 220));
@@ -386,6 +394,12 @@ public class MainPanel extends JPanel
 							regexStatusLabel.setText("Ready");
 							replaceStatusLabel.setIcon(errorIcon);
 							replaceStatusLabel.setText("Error");
+							break;
+						case TOO_MANY_MATCHES:
+							regexStatusLabel.setIcon(tooManyIcon);
+							regexStatusLabel.setText("Too Many Matches");
+							replaceStatusLabel.setIcon(waitingIcon);
+							replaceStatusLabel.setText("Waiting");
 							break;
 						}
 					}

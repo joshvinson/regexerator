@@ -49,6 +49,13 @@ class RegexFieldListener implements DocumentListener
 
 	Thread thread;
 
+	int maxMatches = Integer.parseInt(RXR.get("rxr.regex.maxMatches"));
+
+	enum RecalcResult
+	{
+		SUCCESS, FAIL_REPLACE, FAIL_TOO_MANY_MATCHES
+	}
+
 	/**
 	 * Creates a RegexFieldListener that takes a regex from source, and applies
 	 * it to target.
@@ -84,6 +91,7 @@ class RegexFieldListener implements DocumentListener
 			reset();
 			fireRegexEvent(Type.RECALC_START);
 		}
+
 		thread = new Thread()
 		{
 			@Override
@@ -140,16 +148,16 @@ class RegexFieldListener implements DocumentListener
 				}
 
 				//matcher is good, so grab the matching data and try the replace (if doReplace)
-				boolean result = recalc(m);
+				RecalcResult result = recalc(m);
 
-				if(result)
+				if(result.equals(RecalcResult.SUCCESS))
 				{
 					//replace was successful
 					update();
 					fireRegexEvent(Type.RECALC_COMPLETE);
 					return;
 				}
-				else
+				else if(result.equals(RecalcResult.FAIL_REPLACE))
 				{
 					//replace failed
 					reset();
@@ -159,7 +167,16 @@ class RegexFieldListener implements DocumentListener
 					fireRegexEvent(Type.BAD_REPLACE);
 					return;
 				}
-
+				else if(result.equals(RecalcResult.FAIL_TOO_MANY_MATCHES))
+				{
+					//too many matches
+					reset();
+					update();
+					progress = 0;
+					fireRegexEvent(Type.RECALC_PROGRESS);
+					fireRegexEvent(Type.TOO_MANY_MATCHES);
+					return;
+				}
 			}
 		};
 		thread.start();
@@ -309,7 +326,7 @@ class RegexFieldListener implements DocumentListener
 	 * @param m
 	 *            the Matcher object to get match and group data from
 	 */
-	protected boolean recalc(Matcher m)
+	protected RecalcResult recalc(Matcher m)
 	{
 		matches = new ArrayList<int[]>();
 		groups = new ArrayList<int[][]>();
@@ -325,8 +342,18 @@ class RegexFieldListener implements DocumentListener
 		progress = 0;
 		fireRegexEvent(Type.RECALC_PROGRESS);
 
+		int matchCount = 0;
+
 		while(m.find())
 		{
+			matchCount++;
+			if(matchCount > maxMatches)
+			{
+				progress = 100;
+				fireRegexEvent(Type.RECALC_PROGRESS);
+				return RecalcResult.FAIL_TOO_MANY_MATCHES;
+			}
+
 			int groupCount = m.groupCount();
 
 			//grab 0th group (whole match)
@@ -363,17 +390,21 @@ class RegexFieldListener implements DocumentListener
 				}
 				catch(Exception e)
 				{
-					return false;
+					return RecalcResult.FAIL_REPLACE;
 				}
 			}
 
-			progress = 100 * m.end() / sourceText.length();
+			if(sourceText.length() != 0)
+			{
+				progress = 100 * m.end() / sourceText.length();
+			}
 			if(progress != prevProgress)
 			{
 				fireRegexEvent(Type.RECALC_PROGRESS);
 				prevProgress = progress;
 			}
 		}
+
 		m.appendTail(replaceSB);
 
 		replaceResult = replaceSB.toString();
@@ -381,7 +412,7 @@ class RegexFieldListener implements DocumentListener
 		progress = 100;
 		fireRegexEvent(Type.RECALC_PROGRESS);
 
-		return true;
+		return RecalcResult.SUCCESS;
 	}
 
 	/**
@@ -602,7 +633,6 @@ class RegexFieldListener implements DocumentListener
 
 		for(int i = 0; i < matches.size(); i++)
 		{
-
 			int[][] gs = groups.get(i);
 
 			for(int j = 0; j < gs.length; j++)

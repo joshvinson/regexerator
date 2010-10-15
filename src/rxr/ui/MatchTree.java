@@ -50,13 +50,16 @@ public class MatchTree extends JTree implements RegexEventListener
 					textLoc = node.start;
 					if(getListener().isDoReplace())
 					{
-						ArrayList<int[]> temp = getListener().replaceGroups.get(node.index);
-						for(int[] i : temp)
+						if(getListener().replaceGroups.size() > node.index)
 						{
-							if(i[0] == 0)
+							ArrayList<int[]> temp = getListener().replaceGroups.get(node.index);
+							for(int[] i : temp)
 							{
-								replaceLoc = i[1];
-								break;
+								if(i[0] == 0)
+								{
+									replaceLoc = i[1];
+									break;
+								}
 							}
 						}
 					}
@@ -68,13 +71,16 @@ public class MatchTree extends JTree implements RegexEventListener
 					textLoc = node.start;
 					if(getListener().isDoReplace())
 					{
-						ArrayList<int[]> temp = getListener().replaceGroups.get(node.parent.index);
-						for(int[] i : temp)
+						if(getListener().replaceGroups.size() > node.index)
 						{
-							if(i[0] == node.index)
+							ArrayList<int[]> temp = getListener().replaceGroups.get(node.parent.index);
+							for(int[] i : temp)
 							{
-								replaceLoc = i[1];
-								break;
+								if(i[0] == node.index)
+								{
+									replaceLoc = i[1];
+									break;
+								}
 							}
 						}
 					}
@@ -96,7 +102,7 @@ public class MatchTree extends JTree implements RegexEventListener
 				}
 				catch(BadLocationException e2)
 				{
-					e2.printStackTrace();
+					//e2.printStackTrace();
 				}
 
 				if(getListener().isDoReplace())
@@ -105,7 +111,6 @@ public class MatchTree extends JTree implements RegexEventListener
 					{
 						JTextComponent jtc = getListener().getReplaceTarget();
 						Rectangle pos = jtc.modelToView(replaceLoc);
-						System.out.println(pos);
 						if(pos != null)
 						{
 							getListener().getReplaceTarget().scrollRectToVisible(pos);
@@ -209,36 +214,45 @@ public class MatchTree extends JTree implements RegexEventListener
 		public void recalc()
 		{
 			matchNodes.clear();
-			for(int i = 0; matches != null && i < matches.size(); i++)
+
+			try
 			{
-				String text = "";
-				try
+				for(int i = 0; matches != null && i < matches.size(); i++)
 				{
-					text = lis.target.getDocument().getText(matches.get(i)[0], matches.get(i)[1] - matches.get(i)[0]);
-				}
-				catch(Exception e)
-				{
-					//do nothing
-				}
-
-				MatchNode mn = new MatchNode(matches.get(i)[0], matches.get(i)[1], i, text);
-
-				int[][] g = groups.get(i);
-
-				for(int j = 0; j < g.length; j++)
-				{
-					text = "";
+					String text = "";
 					try
 					{
-						text = lis.target.getDocument().getText(g[j][0], g[j][1] - g[j][0]);
+						text = lis.target.getDocument().getText(matches.get(i)[0], matches.get(i)[1] - matches.get(i)[0]);
 					}
 					catch(Exception e)
 					{
 						//do nothing
 					}
-					mn.groups.add(new GroupNode(mn, g[j][0], g[j][1], j, groupColors[j], text));
+
+					MatchNode mn = new MatchNode(matches.get(i)[0], matches.get(i)[1], i, text);
+
+					int[][] g = groups.get(i);
+
+					for(int j = 0; j < g.length; j++)
+					{
+						text = "";
+						try
+						{
+							text = lis.target.getDocument().getText(g[j][0], g[j][1] - g[j][0]);
+						}
+						catch(Exception e)
+						{
+							//do nothing
+						}
+						mn.groups.add(new GroupNode(mn, g[j][0], g[j][1], j, groupColors[j], text));
+					}
+
+					matchNodes.add(mn);
 				}
-				matchNodes.add(mn);
+			}
+			catch(Exception e)
+			{
+				matchNodes.clear();
 			}
 
 			fireModelChanged();
