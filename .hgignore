@@ -14,3 +14,5 @@ syntax: regexp
 ^ss$
 syntax: regexp
 ^TODO$
+syntax: regexp
+^html$

@@ -1,5 +1,7 @@
 package rxr;
 
+import java.awt.event.*;
+import java.io.*;
 import java.net.*;
 import java.util.*;
 
@@ -9,11 +11,26 @@ import rxr.action.*;
 import rxr.ui.*;
 import rxr.util.*;
 
-public class RXR
+public class RXR extends JApplet
 {
+	private static final long serialVersionUID = 1L;
+
 	public static final Properties props = new Properties();
 
 	public static JFrame window;
+
+	static boolean applet = false;
+
+	public static String userRoot;
+
+	public static PrintWriter log;
+
+	@Override
+	public void start()
+	{
+		applet = true;
+		main(null);
+	}
 
 	/**
 	 * Entry point into regexerator.
@@ -23,12 +40,30 @@ public class RXR
 	 */
 	public static void main(String[] args)
 	{
-		ArrayList<String> propUrls = new ArrayList<String>();
+		if(!applet)
+		{
+			userRoot = System.getProperty("user.home") + "/.rxr/";
+			try
+			{
+				log = new PrintWriter(new FileWriter(userRoot + "rxr.log"), true);
+			}
+			catch(Exception e)
+			{
+				WindowUtil.error(e, "Cannot open log file", true);
+			}
+		}
 
-		propUrls.add("res/props/rxr.properties");
-		propUrls.add("res/props/rxr.settings.properties");
+		log("Starting Regexerator");
 
-		for(String s : propUrls)
+		ArrayList<String> defaultPropUrls = new ArrayList<String>();
+
+		defaultPropUrls.add("res/props/rxr.properties");
+		defaultPropUrls.add("res/props/rxr.settings.properties");
+
+		ArrayList<String> userPropUrls = new ArrayList<String>();
+		userPropUrls.add(userRoot + "rxr.settings.properties");
+
+		for(String s : defaultPropUrls)
 		{
 			try
 			{
@@ -36,7 +71,26 @@ public class RXR
 			}
 			catch(Exception e)
 			{
+				log("Failed to load properties file: " + s);
 				WindowUtil.error(e, "Cannot load properties file: " + s, true);
+			}
+		}
+
+		if(!applet)
+		{
+			for(String s : userPropUrls)
+			{
+				try
+				{
+					File f = new File(s);
+					SystemUtil.createFile(f);
+					props.load(new FileReader(f));
+				}
+				catch(Exception e)
+				{
+					log("Failed to load user properties file: " + s);
+					WindowUtil.error(e, "Cannot load user properties file: " + s, true);
+				}
 			}
 		}
 
@@ -52,7 +106,20 @@ public class RXR
 		MainPanel main = new MainPanel();
 
 		window = new JFrame("Regexerator");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		if(!applet)
+		{
+			window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			window.addWindowListener(new WindowAdapter()
+			{
+				@Override
+				public void windowClosing(WindowEvent e)
+				{
+					//cleanup
+					log("Stopping Regexerator");
+					log.close();
+				}
+			});
+		}
 
 		window.setJMenuBar(createMenuBar());
 
@@ -110,5 +177,16 @@ public class RXR
 	public static String get(String prop)
 	{
 		return props.getProperty(prop);
+	}
+
+	public static void log(String s)
+	{
+		if(!applet)
+		{
+			log.print('[');
+			log.print(new Date());
+			log.print("] ");
+			log.println(s);
+		}
 	}
 }

@@ -10,7 +10,7 @@ import javax.swing.text.*;
 import javax.swing.text.Highlighter.HighlightPainter;
 
 import rxr.*;
-import rxr.ui.RegexEventListener.*;
+import rxr.ui.RegexEventListener.Type;
 import rxr.util.*;
 import rxr.util.component.*;
 
@@ -220,7 +220,8 @@ class RegexFieldListener implements DocumentListener
 			}
 			catch(Exception e)
 			{
-				//
+				//do nothing
+				e.printStackTrace(RXR.log);
 			}
 		}
 		else
@@ -231,7 +232,8 @@ class RegexFieldListener implements DocumentListener
 			}
 			catch(Exception e)
 			{
-				//
+				//do nothing
+				e.printStackTrace(RXR.log);
 			}
 		}
 

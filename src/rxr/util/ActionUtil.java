@@ -33,7 +33,7 @@ public class ActionUtil
 				while(m.find())
 				{
 					String rep = RXR.get(m.group(1));
-					m.appendReplacement(text, rep == null ? "[invalid property]" : rep);
+					m.appendReplacement(text, rep == null ? m.group(1) : rep);
 				}
 				m.appendTail(text);
 				text.append("\n");
@@ -43,7 +43,8 @@ public class ActionUtil
 		}
 		catch(Exception ex)
 		{
-			//
+			//do nothing
+			ex.printStackTrace(RXR.log);
 		}
 	}
 }

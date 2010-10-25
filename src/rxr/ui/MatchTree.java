@@ -9,6 +9,7 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.tree.*;
 
+import rxr.*;
 import rxr.ui.MatchTree.MatchTreeModel.GroupNode;
 import rxr.ui.MatchTree.MatchTreeModel.MatchNode;
 
@@ -227,6 +228,7 @@ public class MatchTree extends JTree implements RegexEventListener
 					catch(Exception e)
 					{
 						//do nothing
+						e.printStackTrace(RXR.log);
 					}
 
 					MatchNode mn = new MatchNode(matches.get(i)[0], matches.get(i)[1], i, text);
@@ -243,6 +245,7 @@ public class MatchTree extends JTree implements RegexEventListener
 						catch(Exception e)
 						{
 							//do nothing
+							e.printStackTrace(RXR.log);
 						}
 						mn.groups.add(new GroupNode(mn, g[j][0], g[j][1], j, groupColors[j], text));
 					}

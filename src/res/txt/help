@@ -1,5 +1,9 @@
 %rxr.programName% Help
 
 Tips:
--Select a match or group in the match tree to highlight it in the text pane.
+-Select a match or group in the match tree to highlight it in the text and replace panes.
 -In the replace box, you can use group references like $1
+-User settings are stored in ~/.rxr/rxr.settings.properties . These settings are implemented, with these defaults:
+	rxr.ui.selectHighlightColor = #C0800080
+	rxr.ui.matchHighlightColor = #FFF00060
+	rxr.regex.maxMatches = 1000

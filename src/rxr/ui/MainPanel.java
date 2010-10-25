@@ -53,7 +53,7 @@ public class MainPanel extends JPanel
 		final ImageIcon runIcon = new ImageIcon(RXR.load("res/media/17155.run_exc.png"));
 		final ImageIcon waitingIcon = new ImageIcon(RXR.load("res/media/13437.elipses.gif"));
 		final ImageIcon tooManyIcon = new ImageIcon(RXR.load("res/media/17597.showdesc_co.gif"));
-		
+
 		final ImageIcon regexIcon = new ImageIcon(RXR.load("res/media/10562.metharg_obj.gif"));
 		final ImageIcon textIcon = new ImageIcon(RXR.load("res/media/10388.file_obj.gif"));
 		final ImageIcon replaceIcon = new ImageIcon(RXR.load("res/media/10450.externalize.gif"));

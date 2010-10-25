@@ -22,8 +22,8 @@ public class SystemUtil
 	/**
 	 * Get the String residing on the clipboard.
 	 * 
-	 * @return any text found on the Clipboard; if none found, return an
-	 *         empty String.
+	 * @return any text found on the Clipboard; if none found, return an empty
+	 *         String.
 	 */
 	public static String getClipboardContents()
 	{
@@ -61,5 +61,25 @@ public class SystemUtil
 		{
 			//
 		}
+	}
+
+	/**
+	 * 
+	 * @param f
+	 * @return true if the file had to be created, false otherwise.
+	 * @throws IOException
+	 */
+	public static boolean createFile(File f) throws IOException
+	{
+		if(f.exists())
+		{
+			return false;
+		}
+		if(!f.getParentFile().exists())
+		{
+			f.getParentFile().mkdirs();
+		}
+		f.createNewFile();
+		return true;
 	}
 }
