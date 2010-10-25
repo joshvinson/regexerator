@@ -28,7 +28,7 @@ public class RXR extends JApplet
 	@Override
 	public void start()
 	{
-		applet = true;
+		RXR.applet = true;
 		main(null);
 	}
 
@@ -84,7 +84,9 @@ public class RXR extends JApplet
 				{
 					File f = new File(s);
 					SystemUtil.createFile(f);
-					props.load(new FileReader(f));
+					FileReader fr = new FileReader(f);
+					props.load(fr);
+					fr.close();
 				}
 				catch(Exception e)
 				{

@@ -75,7 +75,7 @@ public class SystemUtil
 		{
 			return false;
 		}
-		if(!f.getParentFile().exists())
+		if(f.getParentFile() != null && !f.getParentFile().exists())
 		{
 			f.getParentFile().mkdirs();
 		}
