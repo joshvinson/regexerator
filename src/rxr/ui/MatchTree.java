@@ -15,7 +15,7 @@ import rxr.ui.MatchTree.MatchTreeModel.MatchNode;
 
 public class MatchTree extends JTree implements RegexEventListener
 {
-	private static final long serialVersionUID = -8383028514332625758L;
+	private static final long serialVersionUID = 1L;
 
 	RegexFieldListener listener;
 

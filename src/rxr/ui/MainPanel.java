@@ -8,12 +8,12 @@ import javax.swing.border.*;
 import javax.swing.plaf.basic.*;
 
 import rxr.*;
+import rxr.component.*;
 import rxr.util.*;
-import rxr.util.component.*;
 
 public class MainPanel extends JPanel
 {
-	private static final long serialVersionUID = -4238061796428182229L;
+	private static final long serialVersionUID = 1L;
 
 	//components
 
@@ -180,6 +180,8 @@ public class MainPanel extends JPanel
 
 		progress.setUI(new RXRProgressBarUI());
 		progress.setStringPainted(true);
+		progress.setPreferredSize(new Dimension(80, 1));
+		progress.setMinimumSize(new Dimension(80, 1));
 
 		//--layout--
 		setLayout(new BorderLayout());

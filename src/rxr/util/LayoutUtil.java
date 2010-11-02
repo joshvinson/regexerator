@@ -7,7 +7,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import rxr.util.component.*;
+import rxr.component.*;
 
 public class LayoutUtil
 {

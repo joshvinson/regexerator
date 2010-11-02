@@ -1,4 +1,4 @@
-package rxr.util.component;
+package rxr.component;
 
 import javax.swing.*;
 import javax.swing.border.*;

@@ -10,9 +10,9 @@ import javax.swing.text.*;
 import javax.swing.text.Highlighter.HighlightPainter;
 
 import rxr.*;
+import rxr.component.*;
 import rxr.ui.RegexEventListener.Type;
 import rxr.util.*;
-import rxr.util.component.*;
 
 /**
  * RegexFieldListener listens for changes in a Document, and reapplies a regular

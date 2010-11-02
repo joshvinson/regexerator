@@ -45,7 +45,9 @@ public class RXR extends JApplet
 			userRoot = System.getProperty("user.home") + "/.rxr/";
 			try
 			{
-				log = new PrintWriter(new FileWriter(userRoot + "rxr.log"), true);
+				File f = new File(userRoot + "rxr.log");
+				f.getParentFile().mkdirs();
+				log = new PrintWriter(new FileWriter(f), true);
 			}
 			catch(Exception e)
 			{
