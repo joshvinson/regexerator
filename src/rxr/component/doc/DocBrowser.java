@@ -25,7 +25,7 @@ public class DocBrowser extends JPanel
 	JTree nav;
 
 	DocBrowserTreeModel model;
-	
+
 	TitleBarDropShadowBorder paneBorder;
 
 	public DocBrowser(URL root)
@@ -45,7 +45,7 @@ public class DocBrowser extends JPanel
 		pane = new JTextPane();
 
 		pane.setEditable(false);
-		
+
 		pane.setBackground(Color.WHITE);
 
 		pane.addHyperlinkListener(new HyperlinkListener()
@@ -66,7 +66,7 @@ public class DocBrowser extends JPanel
 		TitleBarDropShadowBorder navBorder = new TitleBarDropShadowBorder("Help Contents", contentsIcon);
 		navBorder.getTitleBarBorder().setLeftColor(new Color(240, 180, 110));
 		navJsp.setBorder(navBorder);
-		
+
 		paneBorder = new TitleBarDropShadowBorder("", null);
 		paneJsp.setBorder(paneBorder);
 
@@ -86,7 +86,7 @@ public class DocBrowser extends JPanel
 		jsp.setContinuousLayout(true);
 		jsp.resetToPreferredSizes();
 		jsp.setResizeWeight(0);
-		
+
 		nav.addTreeSelectionListener(new TreeSelectionListener()
 		{
 			@Override
@@ -112,7 +112,7 @@ public class DocBrowser extends JPanel
 		});
 
 		add(jsp);
-		
+
 		setSelection((URLNode)model.getRoot());
 	}
 

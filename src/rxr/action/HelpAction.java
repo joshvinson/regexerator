@@ -14,7 +14,7 @@ public class HelpAction extends AbstractAction
 
 	private static boolean windowOpen = false;
 	private static JFrame window;
-	
+
 	final protected static ImageIcon icon = new ImageIcon(RXR.load("res/media/13165.help.gif"));
 
 	public HelpAction()

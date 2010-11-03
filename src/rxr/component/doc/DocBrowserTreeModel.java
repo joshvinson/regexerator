@@ -20,6 +20,10 @@ public class DocBrowserTreeModel implements TreeModel
 	public void setRoot(URL url)
 	{
 		root = URLNode.makeRoot(url);
+		if(root == null)
+		{
+			throw new RuntimeException("Invalid URL: " + url);
+		}
 		root.fillChildren();
 		root.init();
 

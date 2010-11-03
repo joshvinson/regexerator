@@ -84,7 +84,7 @@ public abstract class URLNode implements Comparable<URLNode>
 			//parse index and title
 			try
 			{
-				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "Cp1252"));
 
 				Pattern titlePattern = Pattern.compile("(?i)<title>(.*?)</title>");
 				Pattern indexPattern = Pattern.compile("(?i)<!--\\s*index\\s*=\\s*(\\d+)\\s*-->");

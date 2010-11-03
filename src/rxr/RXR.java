@@ -47,7 +47,7 @@ public class RXR extends JApplet
 			{
 				File f = new File(userRoot + "rxr.log");
 				f.getParentFile().mkdirs();
-				log = new PrintWriter(new FileWriter(f), true);
+				log = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f), "Cp1252"));
 			}
 			catch(Exception e)
 			{
@@ -86,9 +86,9 @@ public class RXR extends JApplet
 				{
 					File f = new File(s);
 					SystemUtil.createFile(f);
-					FileReader fr = new FileReader(f);
-					props.load(fr);
-					fr.close();
+					InputStreamReader fin = new InputStreamReader(new FileInputStream(f), "Cp1252");
+					props.load(fin);
+					fin.close();
 				}
 				catch(Exception e)
 				{

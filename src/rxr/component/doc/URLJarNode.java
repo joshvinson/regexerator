@@ -19,6 +19,7 @@ public class URLJarNode extends URLNode
 			//System.out.println("[" + this + "]: I'm a file - returning");
 			return;
 		}
+
 		try
 		{
 			Pattern urlPattern = Pattern.compile("^jar:file:(.*?)!/(.*)$");
@@ -55,6 +56,7 @@ public class URLJarNode extends URLNode
 					n.fillChildren();
 				}
 			}
+			jf.close();
 		}
 		catch(Exception e)
 		{
