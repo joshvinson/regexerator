@@ -20,6 +20,8 @@ public class URLJarNode extends URLNode
 			return;
 		}
 
+		JarFile jf = null;
+
 		try
 		{
 			Pattern urlPattern = Pattern.compile("^jar:file:(.*?)!/(.*)$");
@@ -30,7 +32,7 @@ public class URLJarNode extends URLNode
 
 			//System.out.println(m.group(2));
 
-			JarFile jf = new JarFile(m.group(1));
+			jf = new JarFile(m.group(1));
 
 			Enumeration<JarEntry> jes = jf.entries();
 
@@ -61,6 +63,20 @@ public class URLJarNode extends URLNode
 		catch(Exception e)
 		{
 			e.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				if(jf != null)
+				{
+					jf.close();
+				}
+			}
+			catch(Exception e)
+			{
+				//do nothing
+			}
 		}
 	}
 

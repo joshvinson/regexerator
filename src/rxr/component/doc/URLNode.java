@@ -51,7 +51,7 @@ public abstract class URLNode implements Comparable<URLNode>
 			try
 			{
 				URL newurl = new URL(url.toExternalForm() + ".index");
-				BufferedReader in = new BufferedReader(new InputStreamReader(newurl.openStream()));
+				BufferedReader in = new BufferedReader(new InputStreamReader(newurl.openStream(),"Cp1252"));
 
 				String line;
 				while((line = in.readLine()) != null)

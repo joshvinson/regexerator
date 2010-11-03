@@ -127,7 +127,7 @@ public class TitleBarBorder extends AbstractBorder
 		//icon
 		if(drawIcon && w > 16 + 4)
 		{
-			window.drawImage(icon.getImage(), 4, 3, 16, 16, null);
+			window.drawImage(icon.getImage(), 4, 4, 16, 16, null);
 		}
 
 		//text
