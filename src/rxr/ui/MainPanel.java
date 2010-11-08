@@ -8,7 +8,8 @@ import javax.swing.border.*;
 import javax.swing.plaf.basic.*;
 
 import rxr.*;
-import rxr.component.*;
+import rxr.ui.misc.*;
+import rxr.ui.tree.*;
 import rxr.util.*;
 
 public class MainPanel extends JPanel
@@ -126,7 +127,7 @@ public class MainPanel extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				boolean auto = autoExpandCheck.isSelected();
-				matchTree.autoExpand = auto;
+				matchTree.setAutoExpand(auto);
 				if(auto)
 				{
 					matchTree.expand();
@@ -230,9 +231,9 @@ public class MainPanel extends JPanel
 		//splitPane = text and tree
 		final JSplitPane splitPane = new JSplitPane();
 
-		splitPane.setBorder(LayoutUtil.getEmptyBorder());
+		splitPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		BasicSplitPaneUI ui = (BasicSplitPaneUI)splitPane.getUI();
-		ui.getDivider().setBorder(LayoutUtil.getEmptyBorder());
+		ui.getDivider().setBorder(new EmptyBorder(0, 0, 0, 0));
 		ui.getDivider().setDividerSize(3);
 		splitPane.setContinuousLayout(true);
 		splitPane.resetToPreferredSizes();
@@ -241,9 +242,9 @@ public class MainPanel extends JPanel
 		//splitPane2 = test and replace
 		splitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
-		splitPane2.setBorder(LayoutUtil.getEmptyBorder());
+		splitPane2.setBorder(new EmptyBorder(0, 0, 0, 0));
 		ui = (BasicSplitPaneUI)splitPane2.getUI();
-		ui.getDivider().setBorder(LayoutUtil.getEmptyBorder());
+		ui.getDivider().setBorder(new EmptyBorder(0, 0, 0, 0));
 		ui.getDivider().setDividerSize(3);
 		splitPane2.setContinuousLayout(true);
 		splitPane2.resetToPreferredSizes();
@@ -267,10 +268,10 @@ public class MainPanel extends JPanel
 		splitPane.setRightComponent(boxc);
 
 		//borders
-		regexField.setBorder(LayoutUtil.getEmptyBorder(4));
-		textField.setBorder(LayoutUtil.getEmptyBorder(4));
-		regexStatusLabel.setBorder(LayoutUtil.getEmptyBorder(4));
-		matchTree.setBorder(LayoutUtil.getEmptyBorder(4));
+		regexField.setBorder(new EmptyBorder(4, 4, 4, 4));
+		textField.setBorder(new EmptyBorder(4, 4, 4, 4));
+		regexStatusLabel.setBorder(new EmptyBorder(4, 4, 4, 4));
+		matchTree.setBorder(new EmptyBorder(4, 4, 4, 4));
 		autoRefreshCheck.setBorder(new EmptyBorder(2, 2, 2, 2));
 		runButton.setBorder(new EmptyBorder(3, 3, 3, 5));
 		expandButton.setBorder(new EmptyBorder(3, 5, 3, 5));
@@ -278,7 +279,7 @@ public class MainPanel extends JPanel
 
 		progress.setBorder(new DropShadowBorder());
 
-		replaceRegexField.setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 0, Color.GRAY), LayoutUtil.getEmptyBorder(4)));
+		replaceRegexField.setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 0, Color.GRAY), new EmptyBorder(4, 4, 4, 4)));
 		replaceRegexLabel.setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 1, Color.GRAY), new EmptyBorder(5, 3, 5, 3)));
 
 		replaceStatusLabel.setBorder(new CompoundBorder(new MatteBorder(1, 0, 0, 0, Color.GRAY), new EmptyBorder(4, 4, 4, 4)));
@@ -303,7 +304,7 @@ public class MainPanel extends JPanel
 		jspMatchTree.setBorder(borderc);
 		jspReplaceField.setBorder(borderd);
 
-		setBorder(LayoutUtil.getEmptyBorder(1));
+		setBorder(new EmptyBorder(1, 1, 1, 1));
 
 		//add
 		add(boxa, BorderLayout.NORTH);
@@ -369,9 +370,12 @@ public class MainPanel extends JPanel
 						switch(t)
 						{
 						case RECALC_PROGRESS:
-							progress.setValue(listener.progress);
-							progress.setString(listener.matches.size() + " matches");
-							progress.repaint();
+							synchronized(listener)
+							{
+								progress.setValue(listener.progress);
+								progress.setString(listener.matches.size() + " matches");
+								progress.repaint();
+							}
 							break;
 						case RECALC_START:
 							regexStatusLabel.setIcon(startIcon);

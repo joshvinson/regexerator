@@ -16,7 +16,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1284747610935</id>
+			<id>1288888868006</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
@@ -25,12 +25,21 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1284747610939</id>
+			<id>1288888868014</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-true-false-ant-bin</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1288888868018</id>
+			<name></name>
+			<type>30</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-cda_data</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>

@@ -5,7 +5,7 @@ package rxr.ui;
  * finishes, whether it succeeds or finishes. In each case, the event type will
  * be different.
  */
-interface RegexEventListener
+public interface RegexEventListener
 {
 	public enum Type
 	{

@@ -1,4 +1,4 @@
-package rxr.component.doc;
+package rxr.ui.doc;
 
 import java.io.*;
 import java.net.*;

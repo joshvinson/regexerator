@@ -4,6 +4,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import rxr.*;
+
 public class WindowUtil
 {
 	public static void warning(String warning)
@@ -13,7 +15,8 @@ public class WindowUtil
 
 	public static void error(Exception exception, String error, boolean fatal)
 	{
-		JOptionPane.showMessageDialog(null, error + "\n\nExeption text: " + exception, "Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null, error + "\n\nException text: " + exception, "Error", JOptionPane.ERROR_MESSAGE);
+		exception.printStackTrace(RXR.log);
 		if(fatal)
 		{
 			java.lang.System.exit(0);

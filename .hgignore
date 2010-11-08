@@ -16,3 +16,7 @@ syntax: regexp
 ^TODO$
 syntax: regexp
 ^html$
+syntax: regexp
+^dynamic-config\.txt$
+syntax: regexp
+^cda_data$

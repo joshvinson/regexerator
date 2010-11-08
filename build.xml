@@ -41,23 +41,6 @@
 			<fileset file="LICENSE" />
 		</zip>
 	</target>
-	
-	<target name="test-dist" depends="compile" description="generate the distribution">
-		<!-- Create the distribution directory -->
-		<mkdir dir="${dist}" />
-
-		<!-- Create executable jar -->
-		<!-- Put everything in ${build} into the ${ant.project.name}-${DSTAMP}.jar file -->
-		<jar jarfile="${dist}/${rxr.programName}-${rxr.version}-test.jar">
-			<fileset dir="${bin}" />
-			<fileset file="LICENSE" />
-
-			<manifest>
-				<attribute name="Main-Class" value="rxr.test.HelpTest2" />
-				<attribute name="Class-Path" value="" />
-			</manifest>
-		</jar>
-	</target>
 
 	<target name="clean" description="clean output folders">
 		<delete dir="${bin}" />

@@ -10,15 +10,15 @@ import javax.swing.text.*;
 import javax.swing.text.Highlighter.HighlightPainter;
 
 import rxr.*;
-import rxr.component.*;
 import rxr.ui.RegexEventListener.Type;
+import rxr.ui.misc.*;
 import rxr.util.*;
 
 /**
  * RegexFieldListener listens for changes in a Document, and reapplies a regular
  * expression whenever a change occurs.
  */
-class RegexFieldListener implements DocumentListener
+public class RegexFieldListener implements DocumentListener
 {
 	protected JTextField source;
 	protected JTextPane target;
@@ -31,7 +31,7 @@ class RegexFieldListener implements DocumentListener
 
 	protected ArrayList<int[]> matches;
 	protected ArrayList<int[][]> groups;
-	Color[] groupColors;
+	protected Color[] groupColors;
 	protected ArrayList<int[]> replaces;
 	protected ArrayList<ArrayList<int[]>> replaceGroups;
 
@@ -40,18 +40,18 @@ class RegexFieldListener implements DocumentListener
 
 	protected boolean autoRecalc = true;
 
-	boolean doReplace = false;
+	protected boolean doReplace = false;
 
 	protected Object selectHighlightHandle;
 	protected HashSet<Object> replaceHighlightHandles;
 
 	protected int progress;
 
-	Thread thread;
+	protected Thread thread;
 
-	int maxMatches = Integer.parseInt(RXR.get("rxr.regex.maxMatches"));
+	protected int maxMatches = Integer.parseInt(RXR.get("rxr.regex.maxMatches"));
 
-	enum RecalcResult
+	public enum RecalcResult
 	{
 		SUCCESS, FAIL_REPLACE, FAIL_TOO_MANY_MATCHES
 	}
@@ -187,7 +187,7 @@ class RegexFieldListener implements DocumentListener
 		setOutlineGroup(match, -1);
 	}
 
-	public void setOutlineGroup(int match, int group)
+	public synchronized void setOutlineGroup(int match, int group)
 	{
 		//do target
 		int start;
@@ -309,7 +309,7 @@ class RegexFieldListener implements DocumentListener
 	/**
 	 * Deletes any match data that has been collected.
 	 */
-	protected void reset()
+	protected synchronized void reset()
 	{
 		matches = new ArrayList<int[]>();
 		groups = new ArrayList<int[][]>();
@@ -328,7 +328,7 @@ class RegexFieldListener implements DocumentListener
 	 * @param m
 	 *            the Matcher object to get match and group data from
 	 */
-	protected RecalcResult recalc(Matcher m)
+	protected synchronized RecalcResult recalc(Matcher m)
 	{
 		matches = new ArrayList<int[]>();
 		groups = new ArrayList<int[][]>();
@@ -374,7 +374,27 @@ class RegexFieldListener implements DocumentListener
 				groupColors = new Color[groupCount];
 				for(int i = 0; i < groupCount; i++)
 				{
-					groupColors[i] = Color.getHSBColor(i / (float)groupCount, 1f, 1f);
+					//groupColors[i] = Color.getHSBColor(i / (float)groupCount, 1f, 1f);
+
+					//--begin epic code block--
+					/*
+					 * This section determines an /optimal/ coloring scheme for groups. Yeah. Try to do better.
+					 */
+					if(i == 0)
+					{
+						groupColors[i] = Color.getHSBColor(0f, 1f, 1f);
+					}
+					else
+					{
+						double d = Math.floor(Math.log(i) / Math.log(2));
+						double k = i - Math.pow(2, d);
+						double psi = Math.pow(2, d) - d - 1 - 1 / Math.pow(2, d - 1);
+						double phi = d == 0 ? 1 : (k + 1) - Math.floor(k / 2) / Math.pow(2, d - 1) - 1 / Math.pow(2, d);
+						double theta = (psi + phi) / 2;
+						theta -= (int)theta;
+						groupColors[i] = Color.getHSBColor((float)theta, 1f, 1f);
+					}
+					//--end epic code block--
 				}
 			}
 
@@ -384,11 +404,11 @@ class RegexFieldListener implements DocumentListener
 				{
 					int[] replace = new int[2];
 					m.appendReplacement(replaceSB, replaceStr);
-					int replaceLength = getReplaceString(m, replaceStr).length();
+					int replaceLength = calcReplaceString(m, replaceStr).length();
 					replace[0] = replaceSB.length() - replaceLength;
 					replace[1] = replaceSB.length();
 					replaces.add(replace);
-					replaceGroups.add(getReplaceGroups(m, replaceStr, replace[0]));
+					replaceGroups.add(calcReplaceGroups(m, replaceStr, replace[0]));
 				}
 				catch(Exception e)
 				{
@@ -430,7 +450,7 @@ class RegexFieldListener implements DocumentListener
 	 * @return the replacement string with group references replaces by their
 	 *         values
 	 */
-	public String getReplaceString(Matcher m, String replacement)
+	public String calcReplaceString(Matcher m, String replacement)
 	{
 		// Process substitution string to replace group references with groups
 		int cursor = 0;
@@ -513,7 +533,7 @@ class RegexFieldListener implements DocumentListener
 	 *         number. The second and third are the start and end indices of the
 	 *         replaced group in the result.
 	 */
-	public ArrayList<int[]> getReplaceGroups(Matcher m, String replacement, int offset)
+	public ArrayList<int[]> calcReplaceGroups(Matcher m, String replacement, int offset)
 	{
 		ArrayList<int[]> index = new ArrayList<int[]>();
 
@@ -600,25 +620,28 @@ class RegexFieldListener implements DocumentListener
 			@Override
 			public void run()
 			{
-				//fill replaceTarget
-				replaceTarget.setText(replaceResult);
-
-				selectHighlightHandle = null;
-				Highlighter h = target.getHighlighter();
-				Highlighter h2 = replaceTarget.getHighlighter();
-
-				//remove formatting
-				try
+				synchronized(RegexFieldListener.this)
 				{
-					h.removeAllHighlights();
-					h2.removeAllHighlights();
-				}
-				catch(Exception e)
-				{
-					return;
-				}
+					//fill replaceTarget
+					replaceTarget.setText(replaceResult);
 
-				doHighlight();
+					selectHighlightHandle = null;
+					Highlighter h = target.getHighlighter();
+					Highlighter h2 = replaceTarget.getHighlighter();
+
+					//remove formatting
+					try
+					{
+						h.removeAllHighlights();
+						h2.removeAllHighlights();
+					}
+					catch(Exception e)
+					{
+						return;
+					}
+
+					doHighlight();
+				}
 			}
 		});
 	}
@@ -627,7 +650,7 @@ class RegexFieldListener implements DocumentListener
 	 * Applies the match and group data from matches, groups, and groupColors to
 	 * the target document.
 	 */
-	private void doHighlight()
+	private synchronized void doHighlight()
 	{
 		//highlight target
 		Highlighter h = target.getHighlighter();
@@ -833,5 +856,10 @@ class RegexFieldListener implements DocumentListener
 	public void setDoReplace(boolean doReplace)
 	{
 		this.doReplace = doReplace;
+	}
+
+	public ArrayList<ArrayList<int[]>> getReplaceGroups()
+	{
+		return replaceGroups;
 	}
 }

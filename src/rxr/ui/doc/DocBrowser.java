@@ -1,4 +1,4 @@
-package rxr.component.doc;
+package rxr.ui.doc;
 
 import java.awt.*;
 import java.net.*;
@@ -12,7 +12,7 @@ import javax.swing.plaf.basic.*;
 import javax.swing.tree.*;
 
 import rxr.*;
-import rxr.component.*;
+import rxr.ui.misc.*;
 import rxr.util.*;
 
 public class DocBrowser extends JPanel
@@ -79,9 +79,9 @@ public class DocBrowser extends JPanel
 
 		JSplitPane jsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, navJsp, paneJsp);
 
-		jsp.setBorder(LayoutUtil.getEmptyBorder());
+		jsp.setBorder(new EmptyBorder(0,0,0,0));
 		BasicSplitPaneUI ui = (BasicSplitPaneUI)jsp.getUI();
-		ui.getDivider().setBorder(LayoutUtil.getEmptyBorder());
+		ui.getDivider().setBorder(new EmptyBorder(0,0,0,0));
 		ui.getDivider().setDividerSize(3);
 		jsp.setContinuousLayout(true);
 		jsp.resetToPreferredSizes();

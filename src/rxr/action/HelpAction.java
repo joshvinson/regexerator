@@ -5,7 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import rxr.*;
-import rxr.component.doc.*;
+import rxr.ui.doc.*;
 import rxr.util.*;
 
 public class HelpAction extends AbstractAction
@@ -27,7 +27,7 @@ public class HelpAction extends AbstractAction
 	{
 		if(!windowOpen)
 		{
-			window = new JFrame("Regexerator Help");
+			window = new JFrame("Regexerator - Help");
 
 			window.addWindowListener(new WindowAdapter()
 			{

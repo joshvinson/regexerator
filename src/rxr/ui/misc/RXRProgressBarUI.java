@@ -1,4 +1,4 @@
-package rxr.component;
+package rxr.ui.misc;
 
 import java.awt.*;
 import java.awt.geom.*;
