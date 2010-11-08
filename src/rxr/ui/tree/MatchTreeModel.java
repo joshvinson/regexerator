@@ -15,7 +15,7 @@ class MatchTreeModel implements TreeModel
 
 	ArrayList<int[]> matches = new ArrayList<int[]>();
 	ArrayList<int[][]> groups = new ArrayList<int[][]>();
-	Color[] groupColors = null;
+	ArrayList<Color> groupColors = null;
 
 	ArrayList<MatchNode> matchNodes = new ArrayList<MatchNode>();
 
@@ -72,7 +72,7 @@ class MatchTreeModel implements TreeModel
 						//do nothing
 						e.printStackTrace(RXR.log);
 					}
-					mn.groups.add(new GroupNode(mn, g[j][0], g[j][1], j, groupColors[j], text));
+					mn.groups.add(new GroupNode(mn, g[j][0], g[j][1], j, groupColors.get(j), text));
 				}
 
 				matchNodes.add(mn);

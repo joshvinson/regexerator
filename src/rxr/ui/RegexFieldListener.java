@@ -31,7 +31,7 @@ public class RegexFieldListener implements DocumentListener
 
 	protected ArrayList<int[]> matches;
 	protected ArrayList<int[][]> groups;
-	protected Color[] groupColors;
+	protected ArrayList<Color> groupColors;
 	protected ArrayList<int[]> replaces;
 	protected ArrayList<ArrayList<int[]>> replaceGroups;
 
@@ -371,31 +371,32 @@ public class RegexFieldListener implements DocumentListener
 			groups.add(current);
 			if(groupColors == null)
 			{
-				groupColors = new Color[groupCount];
-				for(int i = 0; i < groupCount; i++)
-				{
-					//groupColors[i] = Color.getHSBColor(i / (float)groupCount, 1f, 1f);
+				groupColors = new ArrayList<Color>();
+			}
+			for(int i = groupColors.size(); i < groupCount; i++)
+			{
+				//old method
+				//groupColors[i] = Color.getHSBColor(i / (float)groupCount, 1f, 1f);
 
-					//--begin epic code block--
-					/*
-					 * This section determines an /optimal/ coloring scheme for groups. Yeah. Try to do better.
-					 */
-					if(i == 0)
-					{
-						groupColors[i] = Color.getHSBColor(0f, 1f, 1f);
-					}
-					else
-					{
-						double d = Math.floor(Math.log(i) / Math.log(2));
-						double k = i - Math.pow(2, d);
-						double psi = Math.pow(2, d) - d - 1 - 1 / Math.pow(2, d - 1);
-						double phi = d == 0 ? 1 : (k + 1) - Math.floor(k / 2) / Math.pow(2, d - 1) - 1 / Math.pow(2, d);
-						double theta = (psi + phi) / 2;
-						theta -= (int)theta;
-						groupColors[i] = Color.getHSBColor((float)theta, 1f, 1f);
-					}
-					//--end epic code block--
+				//--begin epic code block--
+				/*
+				 * This section determines an /optimal/ coloring scheme for groups. Yeah. Try to do better.
+				 */
+				if(i == 0)
+				{
+					groupColors.add(Color.getHSBColor(0f, 1f, 1f));
 				}
+				else
+				{
+					double d = Math.floor(Math.log(i) / Math.log(2));
+					double k = i - Math.pow(2, d);
+					double psi = Math.pow(2, d) - d - 1 - 1 / Math.pow(2, d - 1);
+					double phi = d == 0 ? 1 : (k + 1) - Math.floor(k / 2) / Math.pow(2, d - 1) - 1 / Math.pow(2, d);
+					double theta = (psi + phi) / 2;
+					theta -= (int)theta;
+					groupColors.add(Color.getHSBColor((float)theta, 1f, 1f));
+				}
+				//--end epic code block--
 			}
 
 			if(doReplace)
@@ -664,7 +665,7 @@ public class RegexFieldListener implements DocumentListener
 			{
 				try
 				{
-					HighlightPainter ghp = new UnderlineHighlightPainter(groupColors[j]);
+					HighlightPainter ghp = new UnderlineHighlightPainter(groupColors.get(j));
 					h.addHighlight(gs[j][0], gs[j][1], ghp);
 				}
 				catch(Exception e)
@@ -700,7 +701,7 @@ public class RegexFieldListener implements DocumentListener
 					{
 						if(gs.get(j)[0] > 0) //ignore whole group reference
 						{
-							HighlightPainter ghp = new UnderlineHighlightPainter(groupColors[gs.get(j)[0] - 1]);
+							HighlightPainter ghp = new UnderlineHighlightPainter(groupColors.get(gs.get(j)[0] - 1));
 							h.addHighlight(gs.get(j)[1], gs.get(j)[2], ghp);
 						}
 					}
@@ -823,7 +824,7 @@ public class RegexFieldListener implements DocumentListener
 	/**
 	 * @return a list of each set of colors used for each group
 	 */
-	public Color[] getGroupColors()
+	public ArrayList<Color> getGroupColors()
 	{
 		return groupColors;
 	}

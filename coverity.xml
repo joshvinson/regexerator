@@ -39,7 +39,7 @@
 		<covcommitdefects dir="${int-dir}" stream="regexerator" remote="localhost" user="admin" password="123456" />
 	</target>
 
-	<target name="cov.static.all" depends="cov._internal_.loadtask,cov._internal_.static.analyze,cov._internal_.static.commit">
+	<target name="cov.static.all" depends="compile,cov._internal_.loadtask,cov._internal_.static.analyze,cov._internal_.static.commit">
 	</target>
 
 	<target name="cov._internal_.dynamic.test" depends="cov._internal_.loadtask">
