@@ -112,15 +112,14 @@ public class RXR extends JApplet
 		window = new JFrame("Regexerator");
 		if(!applet)
 		{
-			window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			//window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			window.addWindowListener(new WindowAdapter()
 			{
 				@Override
 				public void windowClosing(WindowEvent e)
 				{
 					//cleanup
-					log("Stopping Regexerator");
-					log.close();
+					exit();
 				}
 			});
 		}
@@ -132,6 +131,18 @@ public class RXR extends JApplet
 		window.setSize(600, 400);
 		WindowUtil.center(window);
 		window.setVisible(true);
+	}
+
+	public static void exit()
+	{
+		window.setVisible(false);
+		window.dispose();
+		if(!applet)
+		{
+			log("Stopping Regexerator");
+			log.close();
+			System.exit(0);
+		}
 	}
 
 	public static JMenuBar createMenuBar()

@@ -13,15 +13,28 @@ import javax.swing.tree.*;
 
 import rxr.*;
 import rxr.ui.misc.*;
-import rxr.util.*;
 
+/**
+ * Basic HTML Browser. Given a URL as a root directory, it will find all
+ * sub-directories and files, and include them in the navigation tree. Can
+ * handle links in html files. The root URL can be either a location on the
+ * local filesystem, or a location in a JAR file - both will work, and the
+ * display will be indistiguishable.
+ */
 public class DocBrowser extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 
 	public static final Pattern urlPattern = Pattern.compile("^(?:jar:)?file:(.*?)(?:!/(.*))?$");
 
+	/**
+	 * The pane where the contents of each HTML file are displayed.
+	 */
 	JTextPane pane;
+	
+	/**
+	 * The tree used for navigating within the document directory.
+	 */
 	JTree nav;
 
 	DocBrowserTreeModel model;
@@ -45,9 +58,7 @@ public class DocBrowser extends JPanel
 		pane = new JTextPane();
 
 		pane.setEditable(false);
-
 		pane.setBackground(Color.WHITE);
-
 		pane.addHyperlinkListener(new HyperlinkListener()
 		{
 			@Override
@@ -79,9 +90,9 @@ public class DocBrowser extends JPanel
 
 		JSplitPane jsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, navJsp, paneJsp);
 
-		jsp.setBorder(new EmptyBorder(0,0,0,0));
+		jsp.setBorder(new EmptyBorder(0, 0, 0, 0));
 		BasicSplitPaneUI ui = (BasicSplitPaneUI)jsp.getUI();
-		ui.getDivider().setBorder(new EmptyBorder(0,0,0,0));
+		ui.getDivider().setBorder(new EmptyBorder(0, 0, 0, 0));
 		ui.getDivider().setDividerSize(3);
 		jsp.setContinuousLayout(true);
 		jsp.resetToPreferredSizes();
@@ -95,12 +106,14 @@ public class DocBrowser extends JPanel
 				URLNode n = (URLNode)e.getPath().getLastPathComponent();
 				if(!n.isDir())
 				{
+					//standard file, so open it
 					setPage(n.url);
 					paneBorder.getTitleBarBorder().setLabel(n.title);
 					paneJsp.repaint();
 				}
 				else
 				{
+					//directory, so look for a redirect, and if found, use it. otherwise, don't change display.
 					if(n.redirect != null)
 					{
 						setPage(n.redirect.url);
@@ -113,9 +126,17 @@ public class DocBrowser extends JPanel
 
 		add(jsp);
 
+		//open with the root selected
 		setSelection((URLNode)model.getRoot());
 	}
 
+	/**
+	 * Selects the given URLNode, assuming it is within the navigation tree.
+	 * Selection will also cause the URLNode to be displayed.
+	 * 
+	 * @param n
+	 *            the URLNode to select
+	 */
 	public void setSelection(URLNode n)
 	{
 		ArrayList<URLNode> path = new ArrayList<URLNode>();
@@ -127,24 +148,13 @@ public class DocBrowser extends JPanel
 		nav.setSelectionPath(new TreePath(path.toArray()));
 	}
 
-	public void setPage(String s)
-	{
-		try
-		{
-			setPage(new URL(s));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	public void setPage(URL url)
 	{
 		try
 		{
 			pane.setPage(url);
 
+			//TODO: make property replacement work in html files
 			/*System.out.println(pane.getText());
 			System.out.println("-----------------");
 			System.out.println(pane.getStyledDocument().getText(0, pane.getDocument().getLength()));

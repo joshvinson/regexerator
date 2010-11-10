@@ -4,6 +4,13 @@ import java.awt.*;
 
 public class ColorUtil
 {
+	/**
+	 * Bounds a color parameter to between 0 and 255 (both inclusive).
+	 * 
+	 * @param color
+	 *            the parameter to bound.
+	 * @return color, if 0<=color<=255, 255 if color>255, 0 if color<0
+	 */
 	public static int checkColor(int color)
 	{
 		if(color < 0)
@@ -17,6 +24,14 @@ public class ColorUtil
 		return color;
 	}
 
+	/**
+	 * Inverts a color (for each i in RGB, changes i to 255-i). Keeps alpha the
+	 * same.
+	 * 
+	 * @param color
+	 *            the color to invert.
+	 * @return the inverted color.
+	 */
 	public static Color invert(Color color)
 	{
 		int r = 255 - color.getRed();

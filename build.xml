@@ -14,7 +14,7 @@
 	<target name="compile" description="compile the source ">
 		<mkdir dir="${bin}" />
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${bin}" extdirs="${lib}" debug="on" />
+		<javac srcdir="${src}" destdir="${bin}" debug="on" />
 		<copy todir="${bin}">
 			<fileset dir="${src}" includes="res/**" />
 		</copy>

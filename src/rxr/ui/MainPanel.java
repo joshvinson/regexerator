@@ -10,7 +10,6 @@ import javax.swing.plaf.basic.*;
 import rxr.*;
 import rxr.ui.misc.*;
 import rxr.ui.tree.*;
-import rxr.util.*;
 
 public class MainPanel extends JPanel
 {

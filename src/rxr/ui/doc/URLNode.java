@@ -5,6 +5,12 @@ import java.net.*;
 import java.util.*;
 import java.util.regex.*;
 
+/**
+ * Abstract class representing a URLNode, used by DocBrowser. Almost all of the
+ * functionality is implemented here; Implementations only have to implement
+ * fillChildren, since that is dependant on the actual access method to the
+ * files.
+ */
 public abstract class URLNode implements Comparable<URLNode>
 {
 	URL url;
@@ -14,14 +20,12 @@ public abstract class URLNode implements Comparable<URLNode>
 	ArrayList<URLNode> children;
 
 	URLNode root;
+	URLNode redirect = null;
+	URLNode parent;
 
 	String title;
 
 	int index = Integer.MAX_VALUE;
-
-	URLNode redirect = null;
-
-	URLNode parent;
 
 	public URLNode(URL url, URLNode root, URLNode parent)
 	{

@@ -5,6 +5,9 @@ import java.awt.*;
 import javax.swing.text.*;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
+/**
+ * A simple text highlighter that underlines characters in a selectable color.
+ */
 public class UnderlineHighlightPainter extends DefaultHighlightPainter
 {
 	public UnderlineHighlightPainter(Color color)

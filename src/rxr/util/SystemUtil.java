@@ -51,6 +51,10 @@ public class SystemUtil
 		return result;
 	}
 
+	/**
+	 * Sleeps for m milliseconds, and ignores any exceptions from Thread.sleep().
+	 * @param m
+	 */
 	public static void sleep(int m)
 	{
 		try

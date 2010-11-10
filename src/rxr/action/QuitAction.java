@@ -4,9 +4,14 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import rxr.*;
+
+/**
+ * Exits the application.
+ */
 public class QuitAction extends AbstractAction
 {
-	private static final long serialVersionUID = 1557244056588708726L;
+	private static final long serialVersionUID = 1L;
 
 	public QuitAction()
 	{
@@ -16,6 +21,6 @@ public class QuitAction extends AbstractAction
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		System.exit(0);
+		RXR.exit();
 	}
 }

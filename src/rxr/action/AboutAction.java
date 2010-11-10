@@ -6,6 +6,9 @@ import javax.swing.*;
 
 import rxr.util.*;
 
+/**
+ * Displays the about window. Uses res/txt/about for the text to display. Window is modal.
+ */
 public class AboutAction extends AbstractAction
 {
 	private static final long serialVersionUID = -8753940638546839817L;

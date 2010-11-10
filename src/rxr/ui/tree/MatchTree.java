@@ -13,6 +13,9 @@ import rxr.ui.*;
 import rxr.ui.tree.MatchTreeModel.GroupNode;
 import rxr.ui.tree.MatchTreeModel.MatchNode;
 
+/**
+ * A Tree used to display match results.
+ */
 public class MatchTree extends JTree implements RegexEventListener
 {
 	private static final long serialVersionUID = 1L;

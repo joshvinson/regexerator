@@ -6,6 +6,9 @@ import java.util.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
+/**
+ * TreeModel used by DocBrowser.
+ */
 public class DocBrowserTreeModel implements TreeModel
 {
 	HashSet<TreeModelListener> listeners;

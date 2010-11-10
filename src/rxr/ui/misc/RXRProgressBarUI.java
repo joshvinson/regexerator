@@ -6,6 +6,9 @@ import java.awt.geom.*;
 import javax.swing.*;
 import javax.swing.plaf.*;
 
+/**
+ * A Simple and compact ProgressBarUI.
+ */
 public class RXRProgressBarUI extends ProgressBarUI
 {
 	@Override
