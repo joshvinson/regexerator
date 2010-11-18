@@ -7,6 +7,9 @@ import javax.swing.*;
 
 import rxr.*;
 
+/**
+ * @author Josh Vinson
+ */
 public class ActionUtil
 {
 	/**

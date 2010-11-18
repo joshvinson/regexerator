@@ -8,6 +8,8 @@ import rxr.*;
 
 /**
  * Exits the application.
+ * 
+ * @author Josh Vinson
  */
 public class QuitAction extends AbstractAction
 {

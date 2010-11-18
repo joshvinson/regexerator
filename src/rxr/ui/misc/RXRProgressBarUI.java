@@ -8,6 +8,8 @@ import javax.swing.plaf.*;
 
 /**
  * A Simple and compact ProgressBarUI.
+ * 
+ * @author Josh Vinson
  */
 public class RXRProgressBarUI extends ProgressBarUI
 {

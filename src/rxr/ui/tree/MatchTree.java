@@ -15,6 +15,8 @@ import rxr.ui.tree.MatchTreeModel.MatchNode;
 
 /**
  * A Tree used to display match results.
+ * 
+ * @author Josh Vinson
  */
 public class MatchTree extends JTree implements RegexEventListener
 {

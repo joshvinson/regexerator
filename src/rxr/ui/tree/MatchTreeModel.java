@@ -9,6 +9,9 @@ import javax.swing.tree.*;
 import rxr.*;
 import rxr.ui.*;
 
+/**
+ * @author Josh Vinson
+ */
 class MatchTreeModel implements TreeModel
 {
 	HashSet<TreeModelListener> listeners = new HashSet<TreeModelListener>();

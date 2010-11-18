@@ -2,6 +2,9 @@ package rxr.util;
 
 import java.awt.*;
 
+/**
+ * @author Josh Vinson
+ */
 public class ColorUtil
 {
 	/**

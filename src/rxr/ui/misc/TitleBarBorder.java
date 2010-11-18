@@ -7,6 +7,8 @@ import javax.swing.border.*;
 
 /**
  * A border that presents an eclipse2-style title bar.
+ * 
+ * @author Josh Vinson
  */
 public class TitleBarBorder extends AbstractBorder
 {

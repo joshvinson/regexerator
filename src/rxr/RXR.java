@@ -11,6 +11,9 @@ import rxr.action.*;
 import rxr.ui.*;
 import rxr.util.*;
 
+/**
+ * @author Josh Vinson
+ */
 public class RXR extends JApplet
 {
 	private static final long serialVersionUID = 1L;

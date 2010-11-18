@@ -8,6 +8,8 @@ import javax.swing.tree.*;
 
 /**
  * TreeModel used by DocBrowser.
+ * 
+ * @author Josh Vinson
  */
 public class DocBrowserTreeModel implements TreeModel
 {

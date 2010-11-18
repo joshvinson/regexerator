@@ -5,6 +5,9 @@ import java.util.*;
 import java.util.jar.*;
 import java.util.regex.*;
 
+/**
+ * @author Josh Vinson
+ */
 public class URLJarNode extends URLNode
 {
 	public URLJarNode(URL url, URLNode root, URLNode parent)

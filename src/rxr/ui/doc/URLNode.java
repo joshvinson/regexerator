@@ -10,6 +10,8 @@ import java.util.regex.*;
  * functionality is implemented here; Implementations only have to implement
  * fillChildren, since that is dependant on the actual access method to the
  * files.
+ * 
+ * @author Josh Vinson
  */
 public abstract class URLNode implements Comparable<URLNode>
 {

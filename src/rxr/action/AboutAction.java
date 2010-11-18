@@ -8,6 +8,8 @@ import rxr.util.*;
 
 /**
  * Displays the about window. Uses res/txt/about for the text to display. Window is modal.
+ * 
+ * @author Josh Vinson
  */
 public class AboutAction extends AbstractAction
 {

@@ -17,6 +17,8 @@ import rxr.util.*;
 /**
  * RegexFieldListener listens for changes in a Document, and reapplies a regular
  * expression whenever a change occurs.
+ * 
+ * @author Josh Vinson
  */
 public class RegexFieldListener implements DocumentListener
 {

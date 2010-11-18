@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.*;
 
+/**
+ * @author Josh Vinson
+ */
 public class SystemUtil
 {
 	public static ClipboardOwner owner;

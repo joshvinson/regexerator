@@ -7,6 +7,8 @@ import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
 /**
  * A simple text highlighter that underlines characters in a selectable color.
+ * 
+ * @author Josh Vinson
  */
 public class UnderlineHighlightPainter extends DefaultHighlightPainter
 {

@@ -4,6 +4,8 @@ package rxr.ui;
  * A regex event occurs whenever a new matching operation begins, or when one
  * finishes, whether it succeeds or finishes. In each case, the event type will
  * be different.
+ * 
+ * @author Josh Vinson
  */
 public interface RegexEventListener
 {

@@ -6,6 +6,8 @@ import javax.swing.border.*;
 
 /**
  * A border that adds an eclipse2-style drop shadow.
+ * 
+ * @author Josh Vinson
  */
 public class DropShadowBorder extends AbstractBorder
 {

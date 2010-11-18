@@ -20,6 +20,8 @@ import rxr.ui.misc.*;
  * handle links in html files. The root URL can be either a location on the
  * local filesystem, or a location in a JAR file - both will work, and the
  * display will be indistiguishable.
+ * 
+ * @author Josh Vinson
  */
 public class DocBrowser extends JPanel
 {

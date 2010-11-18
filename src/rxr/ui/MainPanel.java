@@ -11,6 +11,9 @@ import rxr.*;
 import rxr.ui.misc.*;
 import rxr.ui.tree.*;
 
+/**
+ * @author Josh Vinson
+ */
 public class MainPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;

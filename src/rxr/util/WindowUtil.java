@@ -6,6 +6,9 @@ import javax.swing.*;
 
 import rxr.*;
 
+/**
+ * @author Josh Vinson
+ */
 public class WindowUtil
 {
 	public static void warning(String warning)

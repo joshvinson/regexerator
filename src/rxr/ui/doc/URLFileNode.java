@@ -3,6 +3,9 @@ package rxr.ui.doc;
 import java.io.*;
 import java.net.*;
 
+/**
+ * @author Josh Vinson
+ */
 public class URLFileNode extends URLNode
 {
 	public URLFileNode(URL url, URLNode root, URLNode parent)
