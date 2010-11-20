@@ -11,13 +11,13 @@ import rxr.*;
  * 
  * @author Josh Vinson
  */
-public class QuitAction extends AbstractAction
+public class ExitAction extends AbstractAction
 {
 	private static final long serialVersionUID = 1L;
 
-	public QuitAction()
+	public ExitAction()
 	{
-		super("Quit");
+		super("Exit");
 	}
 
 	@Override

@@ -30,20 +30,73 @@ public class MainPanel extends JPanel
 	 * matched against.
 	 */
 	JTextPane textField;
+
+	/**
+	 * Auto perform matching operation when it needs to recalculate.
+	 */
 	JCheckBox autoRefreshCheck;
+
+	/**
+	 * Auto expand the Result tree of matching operation
+	 */
 	JCheckBox autoExpandCheck;
+
+	/**
+	 * Indicate the status of matching operation
+	 */
 	JLabel regexStatusLabel;
+
+	/**
+	 * Perform the matching operation and replacing operation if it is enabled.
+	 */
 	JButton runButton;
+
+	/**
+	 * The result of matching operation display in tree
+	 */
 	MatchTree matchTree;
+
+	/**
+	 * Expand all matching result tree
+	 */
 	JButton expandButton;
+
+	/**
+	 * Collapse all matching result tree
+	 */
 	JButton collapseButton;
+
+	/**
+	 * Enable or Disable replace operation on Test Text
+	 */
 	JCheckBox replaceCheck;
+
+	/**
+	 * The Replace Result field. The output of replacing operation.
+	 */
 	JTextPane replaceField;
+
+	/**
+	 * Separate Test Text and Replace Result
+	 */
 	JSplitPane splitPane2;
+
+	/**
+	 * The replacing string.
+	 */
 	JTextField replaceRegexField;
-	JLabel replaceRegexLabel;
+
+	/**
+	 * Indicate the status of replacing operation
+	 */
 	JLabel replaceStatusLabel;
+
+	/**
+	 * Display progress of matching operation
+	 */
 	JProgressBar progress;
+
+	JLabel replaceRegexLabel;
 
 	RegexFieldListener listener;
 
@@ -320,6 +373,7 @@ public class MainPanel extends JPanel
 			{
 				if(replaceCheck.isSelected() && splitPane.getLeftComponent() == jspTextField)
 				{
+					//enable replace
 					splitPane.remove(jspTextField);
 					splitPane2.setTopComponent(jspTextField);
 					splitPane.setLeftComponent(splitPane2);
@@ -327,11 +381,14 @@ public class MainPanel extends JPanel
 					boxaa1.add(boxaa2);
 					revalidate();
 
+					RXR.getActions().get("save").setEnabled(true);
+
 					listener.setDoReplace(true);
 					listener.regex();
 				}
 				else
 				{
+					//disable replace
 					splitPane.remove(splitPane2);
 					splitPane2.remove(jspTextField);
 					splitPane.setLeftComponent(jspTextField);
@@ -344,6 +401,8 @@ public class MainPanel extends JPanel
 
 					boxaa1.remove(boxaa2);
 					revalidate();
+
+					RXR.getActions().get("save").setEnabled(false);
 
 					if(focus)
 					{
@@ -418,5 +477,25 @@ public class MainPanel extends JPanel
 
 		//initialize ui by running the empty default regex
 		listener.regex();
+	}
+
+	public JTextField getRegexField()
+	{
+		return regexField;
+	}
+
+	public JTextPane getTextField()
+	{
+		return textField;
+	}
+
+	public JTextPane getReplaceField()
+	{
+		return replaceField;
+	}
+
+	public JTextField getReplaceRegexField()
+	{
+		return replaceRegexField;
 	}
 }

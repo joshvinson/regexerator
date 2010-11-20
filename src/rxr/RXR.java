@@ -28,6 +28,10 @@ public class RXR extends JApplet
 
 	public static PrintWriter log;
 
+	protected static MainPanel mainPanel;
+
+	private static HashMap<String, Action> actions;
+
 	@Override
 	public void start()
 	{
@@ -110,7 +114,7 @@ public class RXR extends JApplet
 			//don't bother with PLAF then
 		}
 
-		MainPanel main = new MainPanel();
+		mainPanel = new MainPanel();
 
 		window = new JFrame("Regexerator");
 		if(!applet)
@@ -127,13 +131,27 @@ public class RXR extends JApplet
 			});
 		}
 
+		initActions();
+
 		window.setJMenuBar(createMenuBar());
 
-		window.add(main);
+		window.add(mainPanel);
 
 		window.setSize(600, 400);
 		WindowUtil.center(window);
 		window.setVisible(true);
+	}
+
+	private static void initActions()
+	{
+		actions = new HashMap<String, Action>();
+		actions.put("save", new SaveAction(mainPanel));
+		actions.put("open", new OpenAction(mainPanel));
+		actions.put("exit", new ExitAction());
+		actions.put("help", new HelpAction());
+		actions.put("about", new AboutAction());
+
+		actions.get("save").setEnabled(false);
 	}
 
 	public static void exit()
@@ -156,20 +174,16 @@ public class RXR extends JApplet
 		JMenu file = new JMenu("File");
 		JMenu help = new JMenu("Help");
 
-		//file
-		JMenuItem quit = new JMenuItem(new QuitAction());
-
 		//file - add
-		file.add(quit);
-
-		//help
-		JMenuItem helpItem = new JMenuItem(new HelpAction());
-		JMenuItem about = new JMenuItem(new AboutAction());
+		file.add(actions.get("open"));
+		file.add(actions.get("save"));
+		file.add(new JSeparator());
+		file.add(actions.get("exit"));
 
 		//help - add
-		help.add(helpItem);
+		help.add(actions.get("help"));
 		help.add(new JSeparator());
-		help.add(about);
+		help.add(actions.get("about"));
 
 		//add top
 		menu.add(file);
@@ -206,5 +220,10 @@ public class RXR extends JApplet
 			log.print("] ");
 			log.println(s);
 		}
+	}
+
+	public static HashMap<String, Action> getActions()
+	{
+		return actions;
 	}
 }

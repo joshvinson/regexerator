@@ -11,7 +11,7 @@ import rxr.util.*;
 /**
  * Displays the help window. The help root directory is res/html/help. Window is
  * non-modal, and will only open one copy of itself. Attempted re-opening will
- * focus the open window.\
+ * focus the open window.
  * 
  * @author Josh Vinson
  */
