@@ -10,7 +10,7 @@
 	<property name="src" location="src" />
 	<property name="bin" location="cov-bin" />
 	<property name="int-dir" location="cov-int-dir" />
-	<property name="cov-root" location="C:/Program Files/Coverity/Coverity Integrity Center/static-analysis" />
+	<property name="cov-root" location="C:/Program Files/Coverity/Coverity Integrity Center 5.3/static-analysis" />
 
 	<target name="clean" description="clean output folders">
 		<delete dir="${bin}" />
