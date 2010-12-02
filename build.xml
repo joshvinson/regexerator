@@ -25,7 +25,6 @@
 		<mkdir dir="${dist}" />
 
 		<!-- Create executable jar -->
-		<!-- Put everything in ${build} into the ${ant.project.name}-${DSTAMP}.jar file -->
 		<jar jarfile="${dist}/${rxr.programName}-${rxr.version}.jar">
 			<fileset dir="${bin}" />
 			<fileset file="LICENSE" />

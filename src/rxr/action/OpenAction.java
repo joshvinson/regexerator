@@ -33,8 +33,8 @@ public class OpenAction extends AbstractAction
 	{
 		boolean done = false;
 		JFileChooser fc = new JFileChooser();
-		fc.addChoosableFileFilter(new TextFilter());
-		fc.setAcceptAllFileFilterUsed(false);
+		//fc.addChoosableFileFilter(new TextFilter());
+		//fc.setAcceptAllFileFilterUsed(false);
 		while(!done)
 		{
 			int returnVal = fc.showOpenDialog(RXR.window);
