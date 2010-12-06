@@ -48,6 +48,10 @@ public class RegexFieldListener implements DocumentListener
 	protected HashSet<Object> replaceHighlightHandles;
 
 	protected int progress;
+	
+	protected long startTime;
+
+	protected long time;
 
 	protected Thread thread;
 
@@ -100,6 +104,7 @@ public class RegexFieldListener implements DocumentListener
 			public void run()
 			{
 				setPriority(MIN_PRIORITY);
+				startTime = System.nanoTime();
 				fireRegexEvent(Type.RECALC_START);
 
 				final String regex = source.getText();
@@ -156,6 +161,7 @@ public class RegexFieldListener implements DocumentListener
 				{
 					//replace was successful
 					update();
+					time = System.nanoTime() - startTime;
 					fireRegexEvent(Type.RECALC_COMPLETE);
 					return;
 				}
@@ -425,6 +431,7 @@ public class RegexFieldListener implements DocumentListener
 			}
 			if(progress != prevProgress)
 			{
+				time = System.nanoTime() - startTime;
 				fireRegexEvent(Type.RECALC_PROGRESS);
 				prevProgress = progress;
 			}

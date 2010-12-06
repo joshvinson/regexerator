@@ -23,6 +23,7 @@ public class TitleBarBorder extends AbstractBorder
 	public static final int OVERFLOW_NONE = 0;
 	public static final int OVERFLOW_ELLIPSIS = 1;
 	public static final int OVERFLOW_FADE = 2;
+	public static final int OVERFLOW_ELLIPSIS2 = 3;
 	int fadeLength;
 
 	Color textColor = new Color(0, 0, 0);
@@ -32,19 +33,21 @@ public class TitleBarBorder extends AbstractBorder
 	//Color rightColor = new Color(223, 222, 226);
 	Color rightColor = UIManager.getLookAndFeel().getDefaults().getColor("control");
 
+	String rightText;
+
 	public TitleBarBorder(String text)
 	{
-		this(text, null, true, OVERFLOW_FADE, 20);
+		this(text, null);
 	}
 
 	public TitleBarBorder(String text, ImageIcon icon)
 	{
-		this(text, icon, true, OVERFLOW_FADE, 20);
+		this(text, icon, true);
 	}
 
 	public TitleBarBorder(String text, ImageIcon icon, boolean showGradient)
 	{
-		this(text, icon, showGradient, OVERFLOW_FADE, 20);
+		this(text, icon, showGradient, OVERFLOW_FADE);
 	}
 
 	public TitleBarBorder(String text, ImageIcon icon, boolean showGradient, int overflowHandleStyle)
@@ -140,15 +143,16 @@ public class TitleBarBorder extends AbstractBorder
 
 		int textPaddingX = 5;
 
+		FontMetrics fm = window.getFontMetrics();
+
+		int iconWidth = (drawIcon ? 16 + 5 : 0);
+		int availableTextWidth = w - iconWidth - (textPaddingX * 2);
+
 		if(overflowHandleStyle == OVERFLOW_ELLIPSIS)
 		{
 			window.setPaint(textColor);
 
-			FontMetrics fm = window.getFontMetrics();
 			char[] labelChars = label.toCharArray();
-
-			int iconWidth = (drawIcon ? 16 + 5 : 0);
-			int availableTextWidth = w - iconWidth - (textPaddingX * 2);
 
 			int len = labelChars.length;
 			while(fm.charsWidth(labelChars, 0, len) > availableTextWidth)
@@ -172,6 +176,30 @@ public class TitleBarBorder extends AbstractBorder
 
 			tempLabel = new String(labelChars, 0, len);
 		}
+		if(overflowHandleStyle == OVERFLOW_ELLIPSIS2)
+		{
+			window.setPaint(textColor);
+
+			StringBuilder newlabel = new StringBuilder(label);
+
+			int len = label.length();
+			if(fm.getStringBounds(label, g).getWidth() > availableTextWidth)
+			{
+				newlabel.append("...");
+			}
+
+			while(fm.getStringBounds(newlabel.toString(), g).getWidth() > availableTextWidth && newlabel.length() > 0)
+			{
+				len--;
+				if(len < 0)
+				{
+					len = 0;
+				}
+				newlabel.deleteCharAt(len);
+			}
+
+			tempLabel = newlabel.toString();
+		}
 		else if(overflowHandleStyle == OVERFLOW_FADE)
 		{
 			window.setPaint(new GradientPaint(w - textPaddingX - fadeLength, 0, textColor, w - textPaddingX, 0, textFadeColor));
@@ -190,6 +218,24 @@ public class TitleBarBorder extends AbstractBorder
 		else
 		{
 			window.drawString(tempLabel, textPaddingX, 16);
+		}
+
+		if(rightText != null)
+		{
+			int textWidth = (int)fm.getStringBounds(tempLabel, g).getWidth();
+
+			int availableWidth = availableTextWidth - textWidth;
+
+			window.setFont(font.deriveFont(Font.PLAIN));
+
+			//make sure to use a new FontMetrics, since we changed the font
+			int rightWidth = (int)window.getFontMetrics().getStringBounds(rightText.trim(), window).getWidth();
+
+			if(availableWidth > rightWidth + textPaddingX)
+			{
+				window.setPaint(textColor);
+				window.drawString(rightText, w - rightWidth - textPaddingX, 16);
+			}
 		}
 
 		window.translate(-x, -y);
@@ -238,4 +284,23 @@ public class TitleBarBorder extends AbstractBorder
 		this.overflowHandleStyle = overflowHandleStyle;
 	}
 
+	public int getFadeLength()
+	{
+		return fadeLength;
+	}
+
+	public void setFadeLength(int fadeLength)
+	{
+		this.fadeLength = fadeLength;
+	}
+
+	public String getRightText()
+	{
+		return rightText;
+	}
+
+	public void setRightText(String rightText)
+	{
+		this.rightText = rightText;
+	}
 }

@@ -10,6 +10,7 @@ import javax.swing.plaf.basic.*;
 import rxr.*;
 import rxr.ui.misc.*;
 import rxr.ui.tree.*;
+import rxr.util.*;
 
 /**
  * @author Josh Vinson
@@ -342,7 +343,7 @@ public class MainPanel extends JPanel
 		//jspa.setBorder(LayoutUtil.getEmptyBorder(0));
 		//jspb.setBorder(LayoutUtil.getEmptyBorder(0));
 
-		TitleBarDropShadowBorder bordera = new TitleBarDropShadowBorder("Regular Expression", regexIcon);
+		final TitleBarDropShadowBorder bordera = new TitleBarDropShadowBorder("Regular Expression", regexIcon);
 		TitleBarDropShadowBorder borderb = new TitleBarDropShadowBorder("Test Text", textIcon);
 		TitleBarDropShadowBorder borderc = new TitleBarDropShadowBorder("Match Tree", treeIcon);
 		TitleBarDropShadowBorder borderd = new TitleBarDropShadowBorder("Replace Result", replaceIcon);
@@ -431,10 +432,12 @@ public class MainPanel extends JPanel
 						switch(t)
 						{
 						case RECALC_PROGRESS:
-							synchronized(listener)
+							//synchronized(listener)
 							{
 								progress.setValue(listener.progress);
 								progress.setString(listener.matches.size() + " matches");
+								bordera.getTitleBarBorder().setRightText("Elapsed time: " + StringUtil.format(listener.time / 1e9) + "s");
+								boxaa1.repaint();
 								progress.repaint();
 							}
 							break;
@@ -449,24 +452,32 @@ public class MainPanel extends JPanel
 							regexStatusLabel.setText("Ready");
 							replaceStatusLabel.setIcon(doneIcon);
 							replaceStatusLabel.setText("Ready");
+							bordera.getTitleBarBorder().setRightText("Elapsed time: " + StringUtil.format(listener.time / 1e9) + "s");
+							boxaa1.repaint();
 							break;
 						case BAD_PATTERN:
 							regexStatusLabel.setIcon(errorIcon);
 							regexStatusLabel.setText("Error");
 							replaceStatusLabel.setIcon(waitingIcon);
 							replaceStatusLabel.setText("Waiting");
+							bordera.getTitleBarBorder().setRightText("");
+							boxaa1.repaint();
 							break;
 						case BAD_REPLACE:
 							regexStatusLabel.setIcon(doneIcon);
 							regexStatusLabel.setText("Ready");
 							replaceStatusLabel.setIcon(errorIcon);
 							replaceStatusLabel.setText("Error");
+							bordera.getTitleBarBorder().setRightText("");
+							boxaa1.repaint();
 							break;
 						case TOO_MANY_MATCHES:
 							regexStatusLabel.setIcon(tooManyIcon);
 							regexStatusLabel.setText("Too Many Matches");
 							replaceStatusLabel.setIcon(waitingIcon);
 							replaceStatusLabel.setText("Waiting");
+							bordera.getTitleBarBorder().setRightText("");
+							boxaa1.repaint();
 							break;
 						}
 					}
