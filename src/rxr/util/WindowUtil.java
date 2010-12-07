@@ -19,7 +19,10 @@ public class WindowUtil
 	public static void error(Exception exception, String error, boolean fatal)
 	{
 		JOptionPane.showMessageDialog(null, error + "\n\nException text: " + exception, "Error", JOptionPane.ERROR_MESSAGE);
-		exception.printStackTrace(RXR.log);
+		if(exception != null)
+		{
+			exception.printStackTrace(RXR.log);
+		}
 		if(fatal)
 		{
 			java.lang.System.exit(0);
