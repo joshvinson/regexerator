@@ -16,6 +16,11 @@ public class TitleBarDropShadowBorder extends CompoundBorder
 	protected TitleBarBorder titleBarBorder;
 	protected DropShadowBorder dropShadowBorder;
 
+	public TitleBarDropShadowBorder(String text)
+	{
+		this(text, null);
+	}
+
 	public TitleBarDropShadowBorder(String text, ImageIcon icon)
 	{
 		titleBarBorder = new TitleBarBorder(text, icon, true);
