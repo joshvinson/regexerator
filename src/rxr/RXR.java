@@ -150,6 +150,12 @@ public class RXR extends JApplet
 		actions.put("exit", new ExitAction());
 		actions.put("help", new HelpAction());
 		actions.put("about", new AboutAction());
+		
+		if(applet)
+		{
+			//as long as help doesn't work in applet mode, might as well disable it
+			actions.get("help").setEnabled(false);
+		}
 
 		actions.get("save").setEnabled(false);
 	}
