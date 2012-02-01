@@ -1,3 +1,7 @@
+Regexerator is a graphical regular expression testing tool.
+
+It provides real-time visual feedback for matches on sample text. It also supports find or replace mode. Matches are easily navigated through a match tree interface.
+
 To build:
 
 ant clean dist
