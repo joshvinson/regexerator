@@ -4,7 +4,7 @@
 
 	<description>
 		Regexerator Build File
-    </description>
+	</description>
 
 	<!-- set global properties for this build -->
 	<property name="src" location="src" />
